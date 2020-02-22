@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 class FormsTabs{
 
   TabController tabController;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController sobrenameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController confirmPassController = TextEditingController();
+
   FormsTabs({this.tabController});
 
   Widget LoginTab({TabController tabController}){
@@ -22,7 +29,7 @@ class FormsTabs{
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: TextInputCustom("Email")
+                    child: TextInputCustom("Email", controller: emailController)
                 ),
               ),
               Padding(
@@ -31,7 +38,7 @@ class FormsTabs{
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: TextInputCustom("Senha", obscure: true)
+                    child: TextInputCustom("Senha", obscure: true, controller: passController)
                 ),
               ),
               Container(
@@ -86,7 +93,7 @@ class FormsTabs{
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: TextInputCustom("Nome")
+                    child: TextInputCustom("Nome", controller: nameController)
                 ),
               ),
               Padding(
@@ -95,7 +102,7 @@ class FormsTabs{
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: TextInputCustom("Sobrenome")
+                    child: TextInputCustom("Sobrenome", controller: sobrenameController)
                 ),
               ),
               Padding(
@@ -104,7 +111,7 @@ class FormsTabs{
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: TextInputCustom("Email")
+                    child: TextInputCustom("Email", controller: emailController)
                 ),
               ),
               Padding(
@@ -113,7 +120,16 @@ class FormsTabs{
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                     ),
-                    child: TextInputCustom("Senha", obscure: true)
+                    child: TextInputCustom("Senha", obscure: true, controller: passController)
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: TextInputCustom("Senha", obscure: true, controller: confirmPassController)
                 ),
               ),
               Column(
