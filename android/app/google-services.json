@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "175676412155",
+    "firebase_url": "https://creativeartapp2020.firebaseio.com",
+    "project_id": "creativeartapp2020",
+    "storage_bucket": "creativeartapp2020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175676412155:android:50dbdc91724ecbc02ea05e",
+        "android_client_info": {
+          "package_name": "com.creativeartapp.creative_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175676412155-eqlsp54k3578vqcrt5a9rvssvm7gvlph.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjXbGTlBd5THqfXmcz8qw8n0ZvMGTpiiM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175676412155-eqlsp54k3578vqcrt5a9rvssvm7gvlph.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

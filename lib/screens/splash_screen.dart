@@ -1,3 +1,5 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:creative_app/blocs/login_register_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  final loginAndRegisterBloc = BlocProvider.getBloc<LoginAndRegister>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +64,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Null> exitToSplash()async{
-    await Future.delayed(Duration(seconds: 3));
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginAndSignUpScreen()));
+    print(loginAndRegisterBloc);
+    if(loginAndRegisterBloc.getLoggedStatus()){
+      print("Você esta logado!");
+    }else{
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginAndSignUpScreen()));
+    }
   }
 
   @override
