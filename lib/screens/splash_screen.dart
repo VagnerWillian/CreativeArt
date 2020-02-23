@@ -1,5 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
+import 'package:creative_app/screens/shopping.screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -64,10 +65,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Null> exitToSplash()async{
-    print(loginAndRegisterBloc);
-    if(loginAndRegisterBloc.getLoggedStatus()){
-      print("Você esta logado!");
+    if(await loginAndRegisterBloc.isLogged()){
+      await Future.delayed(Duration(seconds: 2));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
     }else{
+      await Future.delayed(Duration(seconds: 2));
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginAndSignUpScreen()));
     }
   }

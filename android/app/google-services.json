@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "175676412155",
-    "firebase_url": "https://creativeartapp2020.firebaseio.com",
-    "project_id": "creativeartapp2020",
-    "storage_bucket": "creativeartapp2020.appspot.com"
+    "project_number": "728303854804",
+    "firebase_url": "https://creativeart-art-app.firebaseio.com",
+    "project_id": "creativeart-art-app",
+    "storage_bucket": "creativeart-art-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:175676412155:android:50dbdc91724ecbc02ea05e",
+        "mobilesdk_app_id": "1:728303854804:android:3344b565df93a6aaffc741",
         "android_client_info": {
           "package_name": "com.creativeartapp.creative_app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "175676412155-eqlsp54k3578vqcrt5a9rvssvm7gvlph.apps.googleusercontent.com",
+          "client_id": "728303854804-bpaq16ect4d6lgibjb4s0tcngmcgb51t.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAjXbGTlBd5THqfXmcz8qw8n0ZvMGTpiiM"
+          "current_key": "AIzaSyCt_lDhalfXbgGPzwv1xmKJcEATd7bVaHM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "175676412155-eqlsp54k3578vqcrt5a9rvssvm7gvlph.apps.googleusercontent.com",
+              "client_id": "728303854804-bpaq16ect4d6lgibjb4s0tcngmcgb51t.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,22 +1,18 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:creative_app/data/user.data.dart';
+import 'package:creative_app/models/fire.auth.model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginAndRegister implements BlocBase {
-
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseUser _firebaseUser;
   StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
-  Firestore _firestoreRef = Firestore.instance;
 
   /*final StreamController<List<bool>> _loadingController = StreamController.broadcast();
   Stream get getLoading => _loadingController.stream;
@@ -32,8 +28,8 @@ class LoginAndRegister implements BlocBase {
 
   }
 
-  bool getLoggedStatus(){
-    if (_firebaseAuth == null){
+  Future<bool> isLogged()async{
+    if (await _firebaseAuth.currentUser() == null){
       return false;
     }else{
       return true;
@@ -41,37 +37,41 @@ class LoginAndRegister implements BlocBase {
   }
 
   loginWithEmail({@required String email, @required String pass, @required Function onSucess, @required onFailure})async{
-
-
+    _firebaseAuth.signInWithEmailAndPassword(email: email, password: pass).catchError((e){
+      errorAuth(e);
+    });
 
   }
 
-    SignUp({@required String email, @required String pass, @required VoidCallback onSucess, @required Function onFailure})async{
+    SignUp({@required Map<String,dynamic> userMap, @required VoidCallback onSucess, @required Function onFailure})async{
 
-      FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: pass).then((result) async {
+      FirebaseAuth.instance.createUserWithEmailAndPassword(email: userMap['email'], password: userMap['pass']).then((result) async {
         _firebaseUser = result.user;
+        userMap.addAll({'id':_firebaseUser.uid});
 
+        FireUserModel.saveUserDataBasic(userMap: userMap);
         onSucess();
       })
-          .catchError((error){
+        /*  .catchError((error){
         onFailure(errorAuth(error));
-      })
+      })*/
       ;
     }
 
     signOut()async{
-      if(getLoggedStatus())
-        _firebaseAuth.signOut();
+      if(await isLogged())
+        await _firebaseAuth.signOut();
         _firebaseUser = null;
     }
 
 
     loadData()async{
-      if (_firebaseUser == null)
+      if (_firebaseUser == null){
         _firebaseUser = await _firebaseAuth.currentUser();
+      }
         //if(_firebaseUser != null)
         //await _firestoreRef.collection("administradores").document(_firebaseUser.uid).get().then((userData){
-    //  });
+      //});
     }
 
 

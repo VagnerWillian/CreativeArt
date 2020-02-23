@@ -27,15 +27,19 @@ dependencies:
   bloc_pattern: ^2.3.2
   rxdart: ^0.22.0
   shared_preferences: ^0.5.6+2
-  flutter_local_notifications: ^1.1.1
   font_awesome_flutter: ^8.5.0
   flare_flutter: ^2.0.1
+  flutter_masked_text: ^0.8.0
+  toast: ^0.1.5
 
   # GOOGLE CLOUD
   firebase_core: ^0.4.4
   firebase_auth: ^0.15.4
   firebase_storage: ^3.1.1
   cloud_firestore: ^0.13.3
+
+  # COMPONENTES
+  #rounded_loading_button: ^1.0.4
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +61,8 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
+  assets:
+    - assets/anims/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

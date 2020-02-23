@@ -37,8 +37,8 @@ class _LoginAndSignUpScreenState extends State<LoginAndSignUpScreen> with Single
               physics: NeverScrollableScrollPhysics(),
               controller: tabController,
               children: <Widget>[
-                FormsTabs(tabController: tabController).LoginTab(),
-                FormsTabs(tabController: tabController ).RegisterTab(),
+                FormsTabs(context: context, tabController: tabController).LoginTab(),
+                FormsTabs(context: context, tabController: tabController ).RegisterTab(),
               ],
             ),
           ),
