@@ -52,9 +52,9 @@ class LoginAndRegister implements BlocBase {
         FireUserModel.saveUserDataBasic(userMap: userMap);
         onSucess();
       })
-        /*  .catchError((error){
+          .catchError((error){
         onFailure(errorAuth(error));
-      })*/
+      })
       ;
     }
 

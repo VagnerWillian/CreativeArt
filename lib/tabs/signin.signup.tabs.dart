@@ -218,20 +218,20 @@ class FormsTabs{
         };
 
         loginAndRegisterBloc.SignUp(userMap: userMap, onSucess: _registerOnSucess, onFailure: _registerOnFailure);
-        _btnRegisterController.success();
-        _registerOnSucess();
       }else{
         _btnRegisterController.error();
       }
   }
 
   _registerOnSucess(){
+    _btnRegisterController.success();
     Navigator.pushReplacement(_registerformKey.currentState.context, MaterialPageRoute(builder: (context)=>ShopScreen()));
   }
 
   _registerOnFailure(String msg){
     Toast.show(msg, _registerformKey.currentState.context, backgroundColor: Colors.redAccent, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
-
+    _btnRegisterController.error();
+    Future.delayed(Duration(seconds: 2)).then((_){_btnRegisterController.reset();});
   }
 
   enterAccount(){
