@@ -23,11 +23,6 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Color.fromRGBO(40, 40, 40,255),
       body: Container(
         decoration: BoxDecoration(
-              /*image: DecorationImage(
-                fit: BoxFit.cover,
-                  image: CachedNetworkImageProvider(
-                      "https://images.unsplash.com/flagged/photo-1564434369363-696a2e6d96f9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80")
-              )*/
             gradient: LinearGradient(
                 begin: Alignment.topRight,
                 end: Alignment.bottomLeft,
@@ -66,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<Null> exitToSplash()async{
     if(await loginAndRegisterBloc.isLogged()){
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(Duration(seconds: 1));
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
     }else{
       await Future.delayed(Duration(seconds: 2));

@@ -16,6 +16,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Color.fromRGBO(38, 39, 46,1),
       body: Container(
@@ -24,8 +25,8 @@ class _ShopScreenState extends State<ShopScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             GestureDetector(
-              onTap: (){
-                loginAndRegisterBloc.signOut();
+              onTap: ()async{
+                await loginAndRegisterBloc.signOut();
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SplashScreen()));
                 print("Usuario deslogado");
               },
@@ -35,6 +36,10 @@ class _ShopScreenState extends State<ShopScreen> {
                   child: FlareActor(URL_ANIMATION, animation: 'check',)),
             ),
             Text("Seja bem vindo", textAlign: TextAlign.center, style: TextStyle(color: Colors.white),),
+            RaisedButton(
+              child: Text('DELETAR conta', style: TextStyle(color: Colors.white)),
+              onPressed: (){loginAndRegisterBloc.deleteUserTest();},
+            ),
           ],
         ),
       ),

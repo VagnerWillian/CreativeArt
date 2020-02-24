@@ -43,7 +43,7 @@ class _TextInputCustomState extends State<TextInputCustom> {
         style: TextStyle(color: Colors.white),
         decoration: InputDecoration(
           suffixIcon: obscure != true ? null :
-          RaisedButton(onPressed: _showObscure, child: Icon(isObscure ? Icons.visibility_off : Icons.visibility, color: Colors.grey,),color: Colors.transparent,),
+          RaisedButton(elevation: 0, onPressed: _showObscure, child: Icon(isObscure ? Icons.visibility_off : Icons.visibility, color: Colors.grey,),color: Colors.transparent,),
           hintText: hint,
           hintStyle: TextStyle(color: Colors.grey),
           fillColor: Colors.red,

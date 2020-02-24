@@ -11,4 +11,11 @@ class FireUserModel{
     });
   }
 
+  static loadUserData({@required String uid})async{
+    Firestore _firestoreRef = Firestore.instance;
+    await _firestoreRef.collection("clientes").document(uid).get().then((userData){
+      print(userData);
+    });
+  }
+
 }

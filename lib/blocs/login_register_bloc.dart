@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -37,19 +38,49 @@ class LoginAndRegister implements BlocBase {
   }
 
   loginWithEmail({@required String email, @required String pass, @required Function onSucess, @required onFailure})async{
-    _firebaseAuth.signInWithEmailAndPassword(email: email, password: pass).catchError((e){
-      errorAuth(e);
+    await _firebaseAuth.signInWithEmailAndPassword(email: email, password: pass).then((result){
+      _firebaseUser = result.user;
+      loadData();
+      onSucess();
+    }).catchError((e){
+      onFailure(errorAuth(e));
     });
+  }
 
+  deleteUserTest()async{
+    Firestore _firestoreRef = Firestore.instance;
+    await _firestoreRef.collection("clientes").document(_firebaseUser.uid).delete();
+    await _firebaseUser.delete();
+    signOut();
+    print("Usuario deletado");
+  }
+
+  String idGenerator(){
+    String promotion_id; /// 5 PRIMEIROS DIGITOS DO ID E 5 ÚLTIMOS
+    promotion_id =  (_firebaseUser.uid.substring(0, 5) + _firebaseUser.uid.substring(_firebaseUser.uid.length-5)).toUpperCase();
+    List<String> permitedChar =
+        ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z', '0',
+          '1', '2', '3', '4', '5', '6', '7', '8', '9', ];
+
+    for(int x in promotion_id.runes){
+        String char = String.fromCharCode(x);
+        if(!permitedChar.contains(char)){
+          String newChar = permitedChar[Random.secure().nextInt(36)];
+          promotion_id = promotion_id.replaceAll(char, newChar);
+          print("O caractere ${char} do CUPOM foi substituído pelo char ${newChar} por ser incompatível.");
+        }
+    }
+    return promotion_id;
   }
 
     SignUp({@required Map<String,dynamic> userMap, @required VoidCallback onSucess, @required Function onFailure})async{
 
       FirebaseAuth.instance.createUserWithEmailAndPassword(email: userMap['email'], password: userMap['pass']).then((result) async {
         _firebaseUser = result.user;
-        userMap.addAll({'id':_firebaseUser.uid});
+        userMap.addAll({'id':_firebaseUser.uid,'promotionId': idGenerator()});
 
         FireUserModel.saveUserDataBasic(userMap: userMap);
+        loadData();
         onSucess();
       })
           .catchError((error){
@@ -69,9 +100,8 @@ class LoginAndRegister implements BlocBase {
       if (_firebaseUser == null){
         _firebaseUser = await _firebaseAuth.currentUser();
       }
-        //if(_firebaseUser != null)
-        //await _firestoreRef.collection("administradores").document(_firebaseUser.uid).get().then((userData){
-      //});
+        if(_firebaseUser != null)
+        FireUserModel.loadUserData(uid: _firebaseUser.uid);
     }
 
 
