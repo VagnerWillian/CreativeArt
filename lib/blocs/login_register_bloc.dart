@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:creative_app/data/user.data.dart';
@@ -9,24 +9,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:rxdart/rxdart.dart';
 
 class LoginAndRegister implements BlocBase {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   FirebaseUser _firebaseUser;
-  StorageReference _firebaseStorage = FirebaseStorage.instance.ref();
 
-  /*final StreamController<List<bool>> _loadingController = StreamController.broadcast();
-  Stream get getLoading => _loadingController.stream;
-  Sink get setLoading => _loadingController.sink;
-*/
+  final _userController = BehaviorSubject<UserData>();
+  Observable<UserData> get getUser => _userController.stream;
+  Sink<UserData> get setUser => _userController.sink;
 
   LoginAndRegister(){
     loadData();
   }
 
+  UserData get actuallyUser => _userController.value;
+
   @override
   void dispose() {
-
+    _userController.close();
   }
 
   Future<bool> isLogged()async{
@@ -42,15 +43,19 @@ class LoginAndRegister implements BlocBase {
       _firebaseUser = result.user;
       loadData();
       onSucess();
-    }).catchError((e){
+    })
+    .catchError((e){
       onFailure(errorAuth(e));
-    });
+    })
+    ;
   }
 
   deleteUserTest()async{
     Firestore _firestoreRef = Firestore.instance;
-    await _firestoreRef.collection("clientes").document(_firebaseUser.uid).delete();
-    await _firebaseUser.delete();
+   try{
+     await _firestoreRef.collection("clientes").document(_firebaseUser.uid).delete();
+     await _firebaseUser.delete();
+   }catch(ex){}
     signOut();
     print("Usuario deletado");
   }
@@ -93,17 +98,18 @@ class LoginAndRegister implements BlocBase {
       if(await isLogged())
         await _firebaseAuth.signOut();
         _firebaseUser = null;
+        print("Logout!");
     }
 
 
     loadData()async{
       if (_firebaseUser == null){
         _firebaseUser = await _firebaseAuth.currentUser();
+      }else{
+        UserData userData = await FireUserModel.loadUserData(uid: _firebaseUser.uid);
+        setUser.add(userData);
       }
-        if(_firebaseUser != null)
-        FireUserModel.loadUserData(uid: _firebaseUser.uid);
     }
-
 
   @override
   void addListener(listener) {

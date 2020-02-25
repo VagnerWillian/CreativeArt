@@ -1,3 +1,4 @@
+import 'package:creative_app/screens/shopping.screen.dart';
 import 'package:creative_app/tabs/signin.signup.tabs.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,13 @@ class _LoginAndSignUpScreenState extends State<LoginAndSignUpScreen> with Single
 
     return Scaffold(
       appBar: AppBar(
+        leading: RaisedButton(onPressed: (){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
+        },
+          color: Colors.transparent,
+          elevation: 0,
+          child: Icon(Icons.arrow_left, color: Colors.white,),
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -45,6 +53,13 @@ class _LoginAndSignUpScreenState extends State<LoginAndSignUpScreen> with Single
         ),
       ),
     );
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    tabController.dispose();
   }
 
   @override

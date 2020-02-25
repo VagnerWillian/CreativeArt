@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
-import 'package:creative_app/componentes/textformfield/login.signup.input.dart';
+import 'package:creative_app/components/input/login.signup.input.dart';
 import 'package:creative_app/models/validators.forms.dart';
 import 'package:creative_app/pack/off/rounded_loading_button.dart';
 import 'package:creative_app/screens/shopping.screen.dart';
@@ -101,7 +101,7 @@ class FormsTabs{
 
   Widget RegisterTab(){
 
-    nameController.text = "Vagner";
+    nameController.text = "Vagner Willian Martin";
     whatsappController.text = "11959686501";
     emailController.text = "tec_vagner.ti@outlook.com";
     passController.text = "abc123";
@@ -218,9 +218,11 @@ class FormsTabs{
       if(_registerformKey.currentState.validate()){
         Map<String, dynamic> userMap = {
           'name':nameController .text,
+          'avatar': "https://www.kindpng.com/picc/m/78-786207_user-avatar-png-user-avatar-icon-png-transparent.png",
           'whatsapp': whatsappController.text,
           'email':emailController.text,
           'pass':confirmPassController.text,
+          'myWallet':0.0
         };
 
         loginAndRegisterBloc.SignUp(userMap: userMap, onSucess: _registerOnSucess, onFailure: _registerOnFailure);

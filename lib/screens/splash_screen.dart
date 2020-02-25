@@ -60,13 +60,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Null> exitToSplash()async{
-    if(await loginAndRegisterBloc.isLogged()){
-      await Future.delayed(Duration(seconds: 1));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
-    }else{
-      await Future.delayed(Duration(seconds: 2));
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginAndSignUpScreen()));
-    }
+    await Future.delayed(Duration(seconds: 1));
+    loginAndRegisterBloc.loadData();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
   }
 
   @override

@@ -1,10 +1,14 @@
 class Validators{
 
   static String nameValidator(String str){
-    if (str.isEmpty) {
+    if (str.isEmpty || str.length < 2) {
       return "Insira seu nome completo";
-    }else if (!str.contains(RegExp(r'^[a-zA-Z0-9-\s]+$'))) {
+    }else if (!str.contains(RegExp(r'^[a-zA-Z\s]+$'))) {
       return "Sem caracteres especiais";
+    }else if(!str.contains(" ")){
+      return 'Insira também o sobrenome';
+    }else if(str.split(" ")[1].length < 2){
+      return "Sobrenome muito curto";
     }
   }
 
