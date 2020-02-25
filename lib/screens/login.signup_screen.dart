@@ -1,5 +1,6 @@
 import 'package:creative_app/screens/shopping.screen.dart';
 import 'package:creative_app/tabs/signin.signup.tabs.dart';
+import 'package:creative_app/tiles/title.tile.dart';
 import 'package:flutter/material.dart';
 
 class LoginAndSignUpScreen extends StatefulWidget {
@@ -23,19 +24,7 @@ class _LoginAndSignUpScreenState extends State<LoginAndSignUpScreen> with Single
           elevation: 0,
           child: Icon(Icons.arrow_left, color: Colors.white,),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "CREATIVE",
-              style: TextStyle(wordSpacing: 2, color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-            Text(
-              "art.",
-              style: TextStyle(wordSpacing: 2, color: Colors.purpleAccent, fontWeight: FontWeight.bold, fontSize: 20),
-            ),
-          ],
-        ),
+        title: Container(margin: EdgeInsets.only(right: 50),child: TitleTile())
       ),
       body: Center(
         child: Container(

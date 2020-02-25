@@ -98,6 +98,7 @@ class LoginAndRegister implements BlocBase {
       if(await isLogged())
         await _firebaseAuth.signOut();
         _firebaseUser = null;
+        setUser.add(null);
         print("Logout!");
     }
 
