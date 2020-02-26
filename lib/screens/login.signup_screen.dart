@@ -18,7 +18,7 @@ class _LoginAndSignUpScreenState extends State<LoginAndSignUpScreen> with Single
     return Scaffold(
       appBar: AppBar(
         leading: RaisedButton(onPressed: (){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
+          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
         },
           color: Colors.transparent,
           elevation: 0,

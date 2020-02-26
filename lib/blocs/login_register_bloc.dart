@@ -4,9 +4,7 @@ import 'dart:math';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:creative_app/data/user.data.dart';
-import 'package:creative_app/models/fire.auth.model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,12 +16,12 @@ class LoginAndRegister implements BlocBase {
   final _userController = BehaviorSubject<UserData>();
   Observable<UserData> get getUser => _userController.stream;
   Sink<UserData> get setUser => _userController.sink;
+  UserData get actuallyUser => _userController.value;
 
   LoginAndRegister(){
     loadData();
   }
 
-  UserData get actuallyUser => _userController.value;
 
   @override
   void dispose() {
@@ -84,7 +82,7 @@ class LoginAndRegister implements BlocBase {
         _firebaseUser = result.user;
         userMap.addAll({'id':_firebaseUser.uid,'promotionId': idGenerator()});
 
-        FireUserModel.saveUserDataBasic(userMap: userMap);
+        saveUserDataBasic(userMap: userMap);
         loadData();
         onSucess();
       })
@@ -107,10 +105,30 @@ class LoginAndRegister implements BlocBase {
       if (_firebaseUser == null){
         _firebaseUser = await _firebaseAuth.currentUser();
       }else{
-        UserData userData = await FireUserModel.loadUserData(uid: _firebaseUser.uid);
+        UserData userData = await loadUserData(uid: _firebaseUser.uid);
         setUser.add(userData);
       }
     }
+
+  saveUserDataBasic({@required Map userMap}){
+    Firestore _firestoreRef = Firestore.instance;
+    _firestoreRef.settings(persistenceEnabled: true);
+    userMap.remove('pass');
+    _firestoreRef.collection('clientes').document(userMap['id']).setData(userMap).catchError((ex){
+      print(ex);
+    });
+  }
+
+  Future<UserData> loadUserData({@required String uid})async{
+    Firestore _firestoreRef = Firestore.instance;
+    _firestoreRef.settings(persistenceEnabled: true);
+    UserData userData;
+
+    await _firestoreRef.collection("clientes").document(uid).get().then((userDocument){
+      userData = UserData.fromJson(userDocument.data);
+    });
+    return userData;
+  }
 
   @override
   void addListener(listener) {

@@ -33,6 +33,7 @@ dependencies:
   cached_network_image: ^2.0.0
   toast: ^0.1.5
   flutter_money_formatter: ^0.8.3
+  random_string: ^2.0.1
 
   # GOOGLE CLOUD
   firebase_core: ^0.4.4

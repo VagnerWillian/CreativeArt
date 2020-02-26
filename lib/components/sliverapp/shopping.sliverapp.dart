@@ -23,7 +23,7 @@ Widget SliverAppShopping(UserData userData) {
           height: 50,
           decoration: BoxDecoration(
               shape: BoxShape.circle,
-              image: DecorationImage(image: CachedNetworkImageProvider(userData.avatar))
+              image: DecorationImage(image: CachedNetworkImageProvider(userData.avatar), fit: BoxFit.cover)
           ),
         ),
         Column(
