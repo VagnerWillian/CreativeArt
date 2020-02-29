@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
           primaryColor: Color.fromRGBO(38, 39, 46,1),
           scaffoldBackgroundColor: Color.fromRGBO(25, 26, 31,1),
           primarySwatch: Colors.blue,
+          textTheme: TextTheme(body1: TextStyle(color: Colors.white))
         ),
         home: SplashScreen(),
       ),

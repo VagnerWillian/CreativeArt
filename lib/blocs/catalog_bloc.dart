@@ -8,25 +8,32 @@ import 'package:rxdart/rxdart.dart';
 
 class CatalogBloc implements BlocBase {
 
-  final _catalogController = BehaviorSubject<List<FlyerData>>();
-  Observable<List<FlyerData>> get getCatalogList => _catalogController.stream;
-  Sink<List<FlyerData>> get setCatalogList => _catalogController.sink;
-  List<FlyerData> get actuallyListCatalog => _catalogController.value;
+  final _catalogController = BehaviorSubject<Map<String, dynamic>>();
+  Observable<Map<String, dynamic>> get getCatalogList => _catalogController.stream;
+  Sink<Map<String, dynamic>> get setCatalogList => _catalogController.sink;
+  Map<String, dynamic> get actuallyListCatalog => _catalogController.value;
+  Map<String, dynamic> _catalog = {};
 
   CatalogBloc() {
     loadCategories();
-    loadFlyersFromCategory(categoryID: "FFQIsuNwEHOCyYxVmE5X");
+   // loadFlyersFromCategory(categoryID: "FFQIsuNwEHOCyYxVmE5X");
   }
 
   Future<List<CategoryData>> loadCategories()async{
     Firestore _firestoreRef = Firestore.instance;
     _firestoreRef.settings(persistenceEnabled: true);
     List<CategoryData> _categories = [];
+    Map<String, dynamic> _catalog = {};
 
-    await _firestoreRef.collection("categorias").getDocuments().then((categoryDocument){
+    await _firestoreRef.collection("categorias").getDocuments().then((categoryDocument)async{
       for(DocumentSnapshot doc in categoryDocument.documents){
         CategoryData _category = CategoryData.fromJson(doc.data);
-        _categories.add(_category);
+        _catalog = await loadFlyersFromCategory(categoryID: doc.data['id']);
+        if(_catalog[doc.data['id']].length > 0){
+          _categories.add(_category);
+        }else{
+          print("Categoria ${doc.data['title']}, do ID: ${doc.data['id']} está vazio.");
+        }
       }
     });
     return _categories;
@@ -35,21 +42,19 @@ class CatalogBloc implements BlocBase {
   loadFlyersFromCategory({@required String categoryID})async{
     Firestore _firestoreRef = Firestore.instance;
     _firestoreRef.settings(persistenceEnabled: true);
+
     List<FlyerData> _flyers = [];
 
     await _firestoreRef.collection("produtos").limit(6).where("category", isEqualTo: categoryID).getDocuments().then((productDocument){
- //     print("CATALOGOS CARREGADOS => ${productDocument.documents}");
-
       for(DocumentSnapshot doc in productDocument.documents){
         FlyerData _flyerData = FlyerData.fromJson(doc.data);
         _flyers.add(_flyerData);
       }
     });
-
-    setCatalogList.add(_flyers);
+    _catalog.addAll({categoryID: _flyers});
+    setCatalogList.add(_catalog);
+    return _catalog;
   }
-
-  List<FlyerData> get actuallyUser => _catalogController.value;
 
   @override
   void dispose() {

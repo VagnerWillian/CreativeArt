@@ -198,12 +198,14 @@ class _ShoppingTabState extends State<ShoppingTab> with SingleTickerProviderStat
                     future: catalogBloc.loadCategories(),
                     builder: (context, snapshot) {
                       if(!snapshot.hasData){
-                        return Center(
-                          child: Container(
-                            width: 200,
-                            height: 200,
-                            child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white),),
-                          ),
+                        return Column(
+                          children: <Widget>[
+                            Container(
+                              // width: 30,
+                                height: 3,
+                                child: LinearProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.purpleAccent),backgroundColor: Colors.black38,)
+                            ),
+                          ],
                         );
                       }else{
                         return CatalogGrid(snapshot.data);
