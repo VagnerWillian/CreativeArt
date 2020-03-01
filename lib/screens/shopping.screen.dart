@@ -4,6 +4,7 @@ import 'package:creative_app/data/category.flyter.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/menus/menu.shop.dart';
 import 'package:creative_app/models/fire.catalog.model.dart';
+import 'package:creative_app/tabs/promotion.tab.dart';
 import 'package:creative_app/tabs/shopping.tabs.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,7 @@ class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateM
   @override
   Future<void> initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   Future<List<CategoryData>> loadCategories() async {
@@ -42,8 +43,17 @@ class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateM
             physics: NeverScrollableScrollPhysics(),
             controller: _tabController,
             children: <Widget>[
-              ShoppingTab(),
-              Container()
+              ShoppingTab(_tabController),
+              WillPopScope(
+                  onWillPop: (){
+                    _tabController.animateTo(0);
+                  },
+                  child: PromotionTab()),
+              WillPopScope(
+                  onWillPop: (){
+                    _tabController.animateTo(0);
+                  },
+                  child: Container())
             ],
           );
         }

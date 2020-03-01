@@ -9,18 +9,25 @@ import 'package:creative_app/data/category.flyter.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/data/user.data.dart';
 import 'package:creative_app/models/fire.catalog.model.dart';
-import 'package:creative_app/screens/login.signup_screen.dart';
-import 'package:creative_app/screens/splash_screen.dart';
+import 'package:creative_app/screens/login_signup.screen.dart';
+import 'package:creative_app/screens/splash.screen.dart';
 import 'package:creative_app/tiles/title.tile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ShoppingTab extends StatefulWidget {
+
+  TabController _tabController;
+  ShoppingTab(this._tabController);
+
   @override
-  _ShoppingTabState createState() => _ShoppingTabState();
+  _ShoppingTabState createState() => _ShoppingTabState(this._tabController);
 }
 
 class _ShoppingTabState extends State<ShoppingTab> with SingleTickerProviderStateMixin{
+
+  TabController _tabController;
+  _ShoppingTabState(this._tabController);
 
   final loginAndRegisterBloc = BlocProvider.getBloc<LoginAndRegister>();
   final catalogBloc = BlocProvider.getBloc<CatalogBloc>();
@@ -180,7 +187,9 @@ class _ShoppingTabState extends State<ShoppingTab> with SingleTickerProviderStat
                                   ],
                                 ),
                                 RaisedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    _tabController.animateTo(1);
+                                  },
                                   child: Text(
                                     "Saiba mais",
                                     style: TextStyle(color: Colors.black, fontSize: 13),

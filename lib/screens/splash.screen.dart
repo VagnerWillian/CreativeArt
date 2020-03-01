@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'login.signup_screen.dart';
+import 'login_signup.screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override

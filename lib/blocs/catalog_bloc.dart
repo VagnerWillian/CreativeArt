@@ -28,7 +28,7 @@ class CatalogBloc implements BlocBase {
     await _firestoreRef.collection("categorias").getDocuments().then((categoryDocument)async{
       for(DocumentSnapshot doc in categoryDocument.documents){
         CategoryData _category = CategoryData.fromJson(doc.data);
-        _catalog = await loadFlyersFromCategory(categoryID: doc.data['id']);
+        _catalog = await loadFlyersFromCategory(categoryID: doc.data['id'], increment: 4);
         if(_catalog[doc.data['id']].length > 0){
           _categories.add(_category);
         }else{
@@ -39,13 +39,13 @@ class CatalogBloc implements BlocBase {
     return _categories;
   }
 
-  loadFlyersFromCategory({@required String categoryID})async{
+  loadFlyersFromCategory({@required String categoryID, @required increment})async{
     Firestore _firestoreRef = Firestore.instance;
     _firestoreRef.settings(persistenceEnabled: true);
 
     List<FlyerData> _flyers = [];
 
-    await _firestoreRef.collection("produtos").limit(6).where("category", isEqualTo: categoryID).getDocuments().then((productDocument){
+    await _firestoreRef.collection("produtos").limit(increment).where("category", isEqualTo: categoryID).getDocuments().then((productDocument){
       for(DocumentSnapshot doc in productDocument.documents){
         FlyerData _flyerData = FlyerData.fromJson(doc.data);
         _flyers.add(_flyerData);
