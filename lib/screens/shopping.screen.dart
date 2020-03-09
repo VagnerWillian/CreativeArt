@@ -48,7 +48,7 @@ class _ShopScreenState extends State<ShopScreen> with SingleTickerProviderStateM
                   onWillPop: (){
                     _tabController.animateTo(0);
                   },
-                  child: PromotionTab()),
+                  child: PromotionTab(_tabController)),
               WillPopScope(
                   onWillPop: (){
                     _tabController.animateTo(0);

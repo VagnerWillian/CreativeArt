@@ -11,6 +11,7 @@ import 'package:creative_app/data/user.data.dart';
 import 'package:creative_app/models/fire.catalog.model.dart';
 import 'package:creative_app/screens/login_signup.screen.dart';
 import 'package:creative_app/screens/splash.screen.dart';
+import 'package:creative_app/tabs/promotion.tab.dart';
 import 'package:creative_app/tiles/title.tile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,18 +52,7 @@ class _ShoppingTabState extends State<ShoppingTab> with SingleTickerProviderStat
           return <Widget>[
             SliverAppBar(
               expandedHeight: 170.0,
-              leading: RaisedButton(
-                onPressed: () async {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Icon(
-                  FontAwesomeIcons.bars,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                elevation: 0,
-                color: Colors.transparent,
-              ),
+
               forceElevated: true,
               actions: <Widget>[
                 Container(
@@ -189,6 +179,7 @@ class _ShoppingTabState extends State<ShoppingTab> with SingleTickerProviderStat
                                 RaisedButton(
                                   onPressed: () {
                                     _tabController.animateTo(1);
+                                    //Navigator.push(context, MaterialPageRoute(builder: (context)=>PromotionTab(_tabController)));
                                   },
                                   child: Text(
                                     "Saiba mais",

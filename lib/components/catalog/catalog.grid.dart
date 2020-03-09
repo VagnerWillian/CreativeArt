@@ -5,7 +5,9 @@ import 'package:creative_app/blocs/catalog_bloc.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
 import 'package:creative_app/data/category.flyter.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
+import 'package:creative_app/screens/product.screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CatalogGrid extends StatefulWidget {
   List<CategoryData> _list;
@@ -21,6 +23,7 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
 
   TabController tabController;
   ScrollController _scrollController;
+
   final loginAndRegisterBloc = BlocProvider.getBloc<LoginAndRegister>();
   final catalogBloc = BlocProvider.getBloc<CatalogBloc>();
 
@@ -29,6 +32,7 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
   void initState() {
     super.initState();
     tabController = TabController(length: _list.length, vsync: this);
+
   }
 
   @override
@@ -104,6 +108,9 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                             childAspectRatio: (itemWidth / itemHeight),
                           ),
                           itemBuilder: (context, item) {
+
+                            FlyerData _flyerData = snapshot.data[cat.id][item];
+
                             return Container(
                               padding: EdgeInsets.all(5),
                               decoration: BoxDecoration(
@@ -112,14 +119,18 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                               ),
                               child: Column(
                                 children: <Widget>[
-                                  Flexible(child: CachedNetworkImage(imageUrl: snapshot.data[cat.id][item].src)),
+                                  Flexible(child: CachedNetworkImage(imageUrl: _flyerData.src,
+                                    placeholder: (context, str){
+                                      return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white24),),);
+                                    },
+                                  )),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
                                           margin: EdgeInsets.all(5),
                                           child: Text(
-                                            snapshot.data[cat.id][item].title,
+                                            _flyerData.title,
                                             style: TextStyle(color: Colors.grey),
                                             textAlign: TextAlign.start,
                                             maxLines: 2,
@@ -149,7 +160,7 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                                                 ],
                                               ),
                                               Text(
-                                                "por: R\$ 49,99",
+                                                "por: R\$ ${_flyerData.price}",
                                                 style: TextStyle(
                                                     color: Colors.white, fontWeight: FontWeight.bold),
                                               ),
@@ -164,7 +175,9 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                                               elevation: 0,
                                               shape: RoundedRectangleBorder(
                                                   borderRadius: BorderRadius.circular(5)),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductScreen(_flyerData)));
+                                              },
                                               color: Colors.green,
                                               child: //Icon(Icons.shopping_cart, color: Colors.white, size: 19,)
                                               Text(
