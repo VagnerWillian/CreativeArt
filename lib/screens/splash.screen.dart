@@ -1,4 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:creative_app/blocs/catalog_bloc.dart';
+import 'package:creative_app/blocs/geral_bloc.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
 import 'package:creative_app/screens/shopping.screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +18,8 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
 
   final loginAndRegisterBloc = BlocProvider.getBloc<LoginAndRegister>();
+  final geralBloc = BlocProvider.getBloc<GeralBloc>();
+  final catalogBloc = BlocProvider.getBloc<CatalogBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +66,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<Null> exitToSplash()async{
     await Future.delayed(Duration(seconds: 1));
     await loginAndRegisterBloc.loadData();
+    await geralBloc.verificaSeHaCupomGeral();
+    await catalogBloc.applyDiscountGeral(geralBloc.discountGeral);
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
   }
 

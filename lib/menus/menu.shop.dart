@@ -1,3 +1,6 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:creative_app/blocs/login_register_bloc.dart';
+import 'package:creative_app/components/sliverapp/shopping.sliverapp.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -14,6 +17,7 @@ class _DrawerShopState extends State<DrawerShop> {
   TabController _tabController;
 
   _DrawerShopState(this._tabController);
+  final loginAndRegisterBloc = BlocProvider.getBloc<LoginAndRegister>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +36,10 @@ class _DrawerShopState extends State<DrawerShop> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
+            Container(
+              height: 100,
+              child: SliverAppShopping(loginAndRegisterBloc.actuallyUser),
+            ),
             Wrap(
                 children: menu_items.map((menuItem){
                   return FlatButton(

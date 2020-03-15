@@ -222,7 +222,8 @@ class FormsTabs{
           'whatsapp': whatsappController.text,
           'email':emailController.text,
           'pass':confirmPassController.text,
-          'myWallet':0.0
+          'myWallet':0.0,
+          'indicateFrom' : null
         };
 
         loginAndRegisterBloc.SignUp(userMap: userMap, onSucess: _registerOnSucess, onFailure: _registerOnFailure);

@@ -3,9 +3,10 @@ import 'package:bubble_tab_indicator/bubble_tab_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:creative_app/blocs/catalog_bloc.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
-import 'package:creative_app/data/category.flyter.data.dart';
+import 'package:creative_app/data/category.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/screens/product.screen.dart';
+import 'package:creative_app/tiles/catalog.item.tile.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -32,14 +33,13 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
   void initState() {
     super.initState();
     tabController = TabController(length: _list.length, vsync: this);
-
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height) / 3;
-    final double itemWidth = size.width / 2.47;
+    final double itemWidth = size.width / 2.6;
 
     return Expanded(
       child: Column(
@@ -49,6 +49,7 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
             child: TabBar(
               controller: tabController,
               indicatorSize: TabBarIndicatorSize.tab,
+              labelPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               isScrollable: true,
               indicator: new BubbleTabIndicator(
                 indicatorHeight: 30.0,
@@ -92,8 +93,8 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                       }
                       return NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollInfo) {
-                          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-                            catalogBloc.loadFlyersFromCategory(categoryID: _list[tabController.index].id, increment: snapshot.data[cat.id].length + 2);
+                          if (scrollInfo.metrics.pixels > scrollInfo.metrics.maxScrollExtent-60) {
+                           catalogBloc.loadFlyersFromCategory(categoryID: _list[tabController.index].id, increment: 2, scroll: (){});
                            // _loadData();
                           }
                         },
@@ -108,94 +109,8 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                             childAspectRatio: (itemWidth / itemHeight),
                           ),
                           itemBuilder: (context, item) {
-
                             FlyerData _flyerData = snapshot.data[cat.id][item];
-
-                            return Container(
-                              padding: EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                //color: Colors.white10,
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Flexible(child: CachedNetworkImage(imageUrl: _flyerData.src,
-                                    placeholder: (context, str){
-                                      return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white24),),);
-                                    },
-                                  )),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Container(
-                                          margin: EdgeInsets.all(5),
-                                          child: Text(
-                                            _flyerData.title,
-                                            style: TextStyle(color: Colors.grey),
-                                            textAlign: TextAlign.start,
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          )),
-                                      Row(
-                                        children: <Widget>[
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Stack(
-                                                children: <Widget>[
-                                                  Text(
-                                                    "de: R\$ 89,90",
-                                                    style: TextStyle(color: Colors.yellow[800], fontSize: 17),
-                                                  ),
-                                                  Positioned(
-                                                    left: 25,
-                                                    child: Container(
-                                                        width: 85,
-                                                        height: 20,
-                                                        child: CachedNetworkImage(
-                                                            fit: BoxFit.fill,
-                                                            imageUrl:
-                                                            "https://i.ya-webdesign.com/images/cross-icon-png-6.png")),
-                                                  )
-                                                ],
-                                              ),
-                                              Text(
-                                                "por: R\$ ${_flyerData.price}",
-                                                style: TextStyle(
-                                                    color: Colors.white, fontWeight: FontWeight.bold),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Container(
-                                            width: 75,
-                                            child: RaisedButton(
-                                              elevation: 0,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(5)),
-                                              onPressed: () {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductScreen(_flyerData)));
-                                              },
-                                              color: Colors.green,
-                                              child: //Icon(Icons.shopping_cart, color: Colors.white, size: 19,)
-                                              Text(
-                                                "QUERO!",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            );
+                            return CatalogTitleTile(flyerData: _flyerData, context: context);
                           },
                         ),
                       );
@@ -208,4 +123,12 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
       ),
     );
   }
+
+  /*void scrollMore()async{
+    _scrollController = ScrollController();
+    print("SCROLLED ${_scrollController.position.maxScrollExtent-30}");
+    await Future.delayed(Duration(seconds: 0));
+    await _scrollController.animateTo(_scrollController.position.maxScrollExtent-60, duration: Duration(seconds: 1), curve: Curves.fastOutSlowIn);
+    _scrollController = null;
+  }*/
 }

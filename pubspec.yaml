@@ -35,6 +35,8 @@ dependencies:
   flutter_money_formatter: ^0.8.3
   random_string: ^2.0.1
   shimmer: ^1.1.0
+  dotted_border: ^1.0.5
+  flutter_rating_bar: ^3.0.1+1
 
   # GOOGLE CLOUD
   firebase_core: ^0.4.4

@@ -1,3 +1,5 @@
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+
 class Validators{
 
   static String nameValidator(String str){
@@ -33,6 +35,25 @@ class Validators{
     }
   }
 
+static convertToReal(double amount){
+  FlutterMoneyFormatter money = FlutterMoneyFormatter(
+      amount: amount,
+      settings: MoneyFormatterSettings(
+          symbol: "R\$",
+          symbolAndNumberSeparator: " ",
+          decimalSeparator: ","
+      )
+  );
+  return money.output.symbolOnLeft;
+}
 
+
+  static convertToAnalytic(double value){
+    FlutterMoneyFormatter money = FlutterMoneyFormatter(
+        amount: value,
+        settings: MoneyFormatterSettings(fractionDigits: 3)
+    );
+    return money.output.compactNonSymbol;
+  }
 
 }
