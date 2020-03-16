@@ -392,7 +392,9 @@ class _InfoPricesState extends State<InfoPrices> {
             ),
           ],
         ),
-        Text("*Desconto % já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
+        _flyerData.discount[0] == 0 ? Container() : Text("*Desconto já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
+        _cupom == null ? Container() : Text("*Desconto de ${_cupom.porcent.round()}% do cupom já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
+
 
 
       ],
@@ -402,7 +404,7 @@ class _InfoPricesState extends State<InfoPrices> {
 
   String onSucess(CupomData cupomAccept){
     Navigator.of(context).pop();
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Agora você tem desconto"), backgroundColor: Colors.greenAccent, duration: Duration(seconds: 2),));
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Agora você tem ${cupomAccept.porcent.round()}% desconto"), backgroundColor: Colors.greenAccent, duration: Duration(seconds: 2),));
     _cupom = cupomAccept;
   }
 

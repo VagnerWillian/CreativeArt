@@ -7,21 +7,26 @@ class CupomModel{
 
   CupomModel(this._cupomData);
 
-  Future<double> verificaCupom() async {
+  Future<CupomData> verificaCupom() async {
     print("Solicitando desconto: ${_cupomData.id}");
-    return await _verificaCupomExist(_cupomData.id);
+    CupomData cupomAsVerify = await _verificaCupomExist(_cupomData.id);
+    return cupomAsVerify;
   }
 
-  Future<double> _verificaCupomExist(String cupomID) async {
-    print("Verificando cupom: ${cupomID.toUpperCase()}");
+  Future<CupomData> _verificaCupomExist(String cupomID) async {
     Firestore _firestoreRef = Firestore.instance;
     _firestoreRef.settings(persistenceEnabled: true);
+
     CollectionReference _refCupons = _firestoreRef.collection("cupons");
     DocumentSnapshot cupomSelected = await  _refCupons.document(cupomID).get();
+
+    print("Verificando se o cupom: ${cupomID.toUpperCase()} existe");
+
     if(cupomSelected.exists){
-      return cupomSelected.data['porcent'].toDouble();
+      CupomData cupom = CupomData.fromJson(cupomSelected.data);
+      return cupom;
     }else{
-      return 0.0;
+      return null;
     }
   }
 
@@ -33,15 +38,5 @@ class CupomModel{
       return true;
     }
   }*/
-
-  Future<int> validateCupom(String cupomID)async{
-    Firestore _firestoreRef = Firestore.instance;
-    CollectionReference _cuponsRef = _firestoreRef.collection("cupons");
-    _firestoreRef.settings(persistenceEnabled: true);
-
-    DocumentSnapshot cupom = await  _cuponsRef.document(cupomID).get();
-    return cupom.data['porcent'];
-  }
-
 
 }

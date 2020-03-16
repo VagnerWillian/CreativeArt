@@ -24,7 +24,11 @@ class GeralBloc implements BlocBase{
     if(cupomGeral.data['id']!= null){
 
       CupomData startCupom = CupomData.fromJson(cupomGeral.data);
-      double discountReceived = await CupomModel(startCupom).verificaCupom();
+
+      CupomData cupomAsVerify = startCupom;
+      CupomData result = await CupomModel(cupomAsVerify).verificaCupom();
+
+      double discountReceived = await result.porcent;
 
       print("Um descondo geral foi atribuido ${discountReceived}%");
       geralConfig.discountGeral = discountReceived;

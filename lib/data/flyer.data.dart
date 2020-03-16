@@ -132,14 +132,17 @@ class FlyerData {
   }
 
   addDiscountFromCupom(CupomData _cupomData,{Function onFailure, Function onSucess})async{
-    double descountFromCupom = await CupomModel(_cupomData).verificaCupom();
+
+    CupomData cupomAsVerify = await CupomModel(_cupomData).verificaCupom();
+
+    double descountFromCupom = cupomAsVerify.porcent;
     if(descountFromCupom != 0){
-      _cupomData.percent = descountFromCupom;
+      _cupomData.porcent = descountFromCupom;
       discount.add(descountFromCupom);
       print("Desconto do cumpom ${_cupomData.id} atribuido com ${descountFromCupom}%");
       print("Descontos atuais ${discount}");
       injectDescountInPercent(percent: descountFromCupom);
-      onSucess != null ? onSucess(_cupomData) : null;
+      onSucess != null ? onSucess(cupomAsVerify) : null;
     }else{
         onFailure != null ? onFailure("Cupom inválido, expirado ou já inserido") : null;
     }

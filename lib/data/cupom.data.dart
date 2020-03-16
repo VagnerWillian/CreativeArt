@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CupomData {
   String _id;
-  double _percent;
+  double _porcent;
   String _type;
   Timestamp _created;
   Timestamp _expire;
@@ -24,8 +24,8 @@ class CupomData {
 
   String get id => _id;
   set id(String id) => _id = id;
-  double get percent => _percent;
-  set percent(double percent) => _percent = percent;
+  double get porcent => _porcent;
+  set porcent(double percent) => _porcent = percent;
   String get type => _type;
   set type(String type) => _type = type;
   Timestamp get created => _created;
@@ -35,7 +35,7 @@ class CupomData {
 
   CupomData.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
-    _percent = json['percent'];
+    _porcent = json['porcent'];
     _type = json['type'];
     _created = json['created'];
     _expire = json['expire'];
@@ -44,7 +44,7 @@ class CupomData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
-    data['percent'] = this._percent;
+    data['porcent'] = this._porcent;
     data['type'] = this._type;
     data['created'] = this._created;
     data['expire'] = this._expire;
