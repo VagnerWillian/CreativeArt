@@ -1,23 +1,38 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:creative_app/data/cupom.data.dart';
+import 'package:creative_app/data/geral.data.dart';
 import 'package:creative_app/models/cupom.model.dart';
 
 class GeralBloc implements BlocBase{
 
-  int discountGeral;
+  GeralData geralConfig = GeralData();
 
-  GeralBloc() {}
+  GeralBloc();
 
-  verificaSeHaCupomGeral() async {
+  loadConfigs()async{
+     await verificaSeHaCupomGeral();
+  }
+
+  Future<int> verificaSeHaCupomGeral() async {
     Firestore _firestoreRef = Firestore.instance;
-    CollectionReference _geralRef = _firestoreRef.collection("geral");
     _firestoreRef.settings(persistenceEnabled: true);
+
+    CollectionReference _geralRef = _firestoreRef.collection("geral");
     DocumentSnapshot cupomGeral = await  _geralRef.document("cupomGeral").get();
-    if(cupomGeral.data['id'] == null){
-      discountGeral = 0;
+
+    if(cupomGeral.data['id']!= null){
+
+      CupomData startCupom = CupomData.fromJson(cupomGeral.data);
+      double discountReceived = await CupomModel(startCupom).verificaCupom();
+
+      print("Um descondo geral foi atribuido ${discountReceived}%");
+      geralConfig.discountGeral = discountReceived;
     }else{
-      discountGeral = await Cupom(cupomGeral.data['id']).verificaCupom(cupomGeral.data['id']);
+      print("Nenhum cupom esta atribuido");
+      geralConfig.discountGeral = 0.0;
     }
+
   }
 
   @override

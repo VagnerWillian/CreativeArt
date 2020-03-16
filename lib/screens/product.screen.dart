@@ -2,10 +2,13 @@ import 'dart:ui';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:creative_app/blocs/catalog_bloc.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
+import 'package:creative_app/data/cupom.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/dialogs/preview.flyer.dialog.dart';
+import 'package:creative_app/models/cupom.model.dart';
 import 'package:creative_app/models/fire.catalog.model.dart';
 import 'package:creative_app/models/validators.forms.dart';
 import 'package:creative_app/tiles/analytics.product.tile.dart';
@@ -146,36 +149,7 @@ class _ProductScreenState extends State<ProductScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  child: RaisedButton(onPressed: (){},
-                    color: Colors.yellow[800],
-                    child: Text(Validators.convertToReal(_flyerData.finalPrice()), style: TextStyle(color: Colors.white),),
-                  ),
-                ),
-
-                Container(
-                  height: 35,
-                  child: DottedBorder(
-                    color: Colors.yellow[800],
-                    child: OutlineButton(onPressed: (){},
-                      color: Colors.black26,
-                      child: Text("INSERIR CUPOM", style: TextStyle(color: Colors.yellow[800]),),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Text("*Desconto já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
-
-
-          ],
-        ),
-
+        InfoPrices(_flyerData),
         Column(
           children: <Widget>[
             Container(
@@ -337,5 +311,108 @@ class _ProductScreenState extends State<ProductScreen> {
         ),
       ),
     );
+  }
+}
+
+class InfoPrices extends StatefulWidget {
+
+  FlyerData _flyerData;
+
+  InfoPrices(this._flyerData);
+
+  @override
+  _InfoPricesState createState() => _InfoPricesState(this._flyerData);
+}
+
+class _InfoPricesState extends State<InfoPrices> {
+
+  FlyerData _flyerData;
+  TextEditingController _cupomCotroller = TextEditingController(text: "GOSPELMENTE");
+  CupomData _cupom;
+
+  _InfoPricesState(this._flyerData);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              child: RaisedButton(onPressed: (){},
+                color: Colors.yellow[800],
+                child: Text(Validators.convertToReal(_flyerData.finalPrice()), style: TextStyle(color: Colors.white),),
+              ),
+            ),
+
+            Container(
+              height: 35,
+              child: DottedBorder(
+                color: Colors.yellow[800],
+                child: OutlineButton(
+                  onPressed: (){
+                  showDialog(
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context){
+                        return Dialog(
+                          child: Container(
+                            height: 200,
+                            child: Form(
+                              child: Column(
+                                children: <Widget>[
+                                  TextFormField(
+                                    controller: _cupomCotroller,
+                                  ),
+                                  RaisedButton(onPressed: ()async{
+                                    CupomData _verifyCupom = CupomData(id: _cupomCotroller.text.toUpperCase());
+                                    if(_cupom == null){
+                                      await _flyerData.addDiscountFromCupom(_verifyCupom, onFailure: onFailure, onSucess: onSucess);
+                                      setState(() {});
+                                    }else{
+                                      onFailure("Um cupom já foi inserido");
+                                    }
+
+                                  },
+                                  child: Text("Verificar"),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                  );
+                },
+                  color: Colors.black26,
+                  child: Text(setCupom(), style: TextStyle(color: Colors.yellow[800]),),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Text("*Desconto % já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
+
+
+      ],
+    );
+  }
+
+
+  String onSucess(CupomData cupomAccept){
+    Navigator.of(context).pop();
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Agora você tem desconto"), backgroundColor: Colors.greenAccent, duration: Duration(seconds: 2),));
+    _cupom = cupomAccept;
+  }
+
+  String setCupom(){
+    return _cupom == null ? "INSERIR CUPOM" : _cupom.id.toUpperCase();
+  }
+
+  onFailure(String errorMessage){
+    Navigator.of(context).pop();
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.redAccent, duration: Duration(seconds: 2),));
+    //_cupom = null;
   }
 }

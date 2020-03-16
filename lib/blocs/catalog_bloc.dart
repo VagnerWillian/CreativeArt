@@ -51,9 +51,8 @@ class CatalogBloc implements BlocBase {
       for(DocumentSnapshot doc in productDocument.documents){
         FlyerData _flyerData = FlyerData.fromJson(doc.data);
 
-
-
-       _flyerData.addDiscount(percent: discountGeral);
+        final catalogBloc = BlocProvider.getBloc<GeralBloc>();
+        _flyerData.addDiscount(percent: catalogBloc.geralConfig.discountGeral);
 
 
         _flyers.add(_flyerData);
@@ -61,19 +60,7 @@ class CatalogBloc implements BlocBase {
     });
     _catalog.addAll({categoryID: _flyers});
     setCatalogList.add(_catalog);
-    try{
-      scroll();
-    }catch(ex){}
     return _catalog;
-  }
-
-  applyDiscountGeral(int discount){
-    discountGeral = discount;
-  }
-
-
-  applyDiscounts(){
-
   }
 
   saveCatalogData(FlyerData flyerData) async {

@@ -1,26 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:creative_app/data/cupom.data.dart';
 
-class Cupom{
+class CupomModel{
 
-  String id;
+  CupomData _cupomData;
 
-  Cupom(this.id){
-    verificaCupomExist();
+  CupomModel(this._cupomData);
+
+  Future<double> verificaCupom() async {
+    print("Solicitando desconto: ${_cupomData.id}");
+    return await _verificaCupomExist(_cupomData.id);
   }
 
-  verificaCupomExist() async {
+  Future<double> _verificaCupomExist(String cupomID) async {
+    print("Verificando cupom: ${cupomID.toUpperCase()}");
     Firestore _firestoreRef = Firestore.instance;
-    CollectionReference _geralRef = _firestoreRef.collection("geral");
     _firestoreRef.settings(persistenceEnabled: true);
-    DocumentSnapshot cupomGeral = await  _geralRef.document("cupomGeral").get();
-    if(cupomGeral.data['id'] == null){
-      return 0;
+    CollectionReference _refCupons = _firestoreRef.collection("cupons");
+    DocumentSnapshot cupomSelected = await  _refCupons.document(cupomID).get();
+    if(cupomSelected.exists){
+      return cupomSelected.data['porcent'].toDouble();
     }else{
-      return await verificaCupom(cupomGeral.data['id']);
+      return 0.0;
     }
   }
 
-  Future<int> verificaCupom(String cupomID)async{
+
+  /*  bool isExpired(CupomData cupomData){
+    if(Timestamp.now().toDate().isBefore(cupomData.expire.toDate())){
+      return false;
+    }else{
+      return true;
+    }
+  }*/
+
+  Future<int> validateCupom(String cupomID)async{
     Firestore _firestoreRef = Firestore.instance;
     CollectionReference _cuponsRef = _firestoreRef.collection("cupons");
     _firestoreRef.settings(persistenceEnabled: true);

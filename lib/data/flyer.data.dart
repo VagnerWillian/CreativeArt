@@ -12,6 +12,8 @@
 "rate" : 0.1
 }
 */
+import 'package:creative_app/data/cupom.data.dart';
+import 'package:creative_app/models/cupom.model.dart';
 import 'package:flutter/material.dart';
 
 class FlyerData {
@@ -19,7 +21,7 @@ class FlyerData {
   String _title;
   String _src;
   double _price;
-  List<int> _discount;
+  List<double> _discount;
   int _cupom;
   String _category;
   double _views;
@@ -31,7 +33,7 @@ class FlyerData {
         String title,
         String src,
         double price,
-        List<int> discount,
+        List<double> discount,
         int cupom,
         String category,
         double views,
@@ -57,8 +59,8 @@ class FlyerData {
   set src(String src) => _src = src;
   double get price => _price;
   set price(double price) => _price = price;
-  List<int> get discount => _discount;
-  set discount(List<int> discount) => _discount = discount;
+  List<double> get discount => _discount;
+  set discount(List<double> discount) => _discount = discount;
   int get cupom => _cupom;
   set cupom(int cupom) => _cupom = cupom;
   String get category => _category;
@@ -75,7 +77,7 @@ class FlyerData {
     _title = json['title'];
     _src = json['src'];
     _price = json['price'];
-    _discount = json['discount'].cast<int>();
+    _discount = json['discount'].cast<double>();
     _cupom = json['cupom'];
     _category = json['category'];
     _views = json['views'];
@@ -98,25 +100,49 @@ class FlyerData {
     return data;
   }
 
-  int totalDiscount(){
-    int totalPercent = 0;
-    if(discount.length > 0){
-      for(int x in discount){
+  double totalDiscount(){
+    double totalPercent = 0;
+        for(double x in discount){
         totalPercent += x;
-      }
     }
     return totalPercent;
   }
+/*
+
+// EXEMPLO USANDO OS VALORES AMMOUT: 55 E PERCENT 100
+  ApplyDiscount(double ammount, double percent){
+    double ammountFinal = ammount - double.parse(((ammount / 100) * percent).toStringAsFixed(2));
+    print("BUUUH=> DE ${ammount} para ${ammountFinal}");
+  }
+*/
 
   double finalPrice(){
     double ammountWithDiscount = 0;
-    ammountWithDiscount = price - price / 100 * totalDiscount();
-    return ammountWithDiscount;
+    ammountWithDiscount = injectDescountInPercent(percent: totalDiscount());
+    return num.parse(ammountWithDiscount.toStringAsFixed(2));
   }
 
-  addDiscount({@required int percent}){
-    if(percent != 0)
-    discount = [percent];
+  double injectDescountInPercent({@required double percent}){
+    return (price - ((price / 100) * percent)).toDouble();
+  }
+
+  addDiscount({@required double percent}){
+    if(percent != 0.0)
+      discount = [percent];
+  }
+
+  addDiscountFromCupom(CupomData _cupomData,{Function onFailure, Function onSucess})async{
+    double descountFromCupom = await CupomModel(_cupomData).verificaCupom();
+    if(descountFromCupom != 0){
+      _cupomData.percent = descountFromCupom;
+      discount.add(descountFromCupom);
+      print("Desconto do cumpom ${_cupomData.id} atribuido com ${descountFromCupom}%");
+      print("Descontos atuais ${discount}");
+      injectDescountInPercent(percent: descountFromCupom);
+      onSucess != null ? onSucess(_cupomData) : null;
+    }else{
+        onFailure != null ? onFailure("Cupom inválido, expirado ou já inserido") : null;
+    }
   }
 
   addView(){

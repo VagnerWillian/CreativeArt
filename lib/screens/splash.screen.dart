@@ -66,8 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<Null> exitToSplash()async{
     await Future.delayed(Duration(seconds: 1));
     await loginAndRegisterBloc.loadData();
-    await geralBloc.verificaSeHaCupomGeral();
-    await catalogBloc.applyDiscountGeral(geralBloc.discountGeral);
+    await geralBloc.loadConfigs();
     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ShopScreen()));
   }
 
