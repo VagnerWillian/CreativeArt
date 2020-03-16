@@ -3,6 +3,7 @@ import 'package:creative_app/blocs/login_register_bloc.dart';
 import 'package:creative_app/components/catalog/catalog.grid.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PromotionTab extends StatefulWidget {
@@ -105,7 +106,9 @@ class _PromotionTabState extends State<PromotionTab> {
                                         width: 60,
                                         child: RaisedButton(
                                           elevation: 0,
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Clipboard.setData(ClipboardData(text: loginAndRegisterBloc.actuallyUser.promotionId));
+                                          },
                                           color: Colors.white10,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(100), topRight: Radius.circular(100))),
                                           child: Icon(FontAwesomeIcons.copy, color: Colors.white,),

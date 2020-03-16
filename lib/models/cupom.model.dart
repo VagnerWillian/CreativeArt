@@ -24,19 +24,23 @@ class CupomModel{
 
     if(cupomSelected.exists){
       CupomData cupom = CupomData.fromJson(cupomSelected.data);
-      return cupom;
+      if(!isExpired(cupom)){
+        return cupom;
+      }else{
+        return null;
+      }
     }else{
       return null;
     }
   }
 
 
-  /*  bool isExpired(CupomData cupomData){
+    bool isExpired(CupomData cupomData){
     if(Timestamp.now().toDate().isBefore(cupomData.expire.toDate())){
       return false;
     }else{
       return true;
     }
-  }*/
+  }
 
 }

@@ -100,13 +100,6 @@ class FlyerData {
     return data;
   }
 
-  double totalDiscount(){
-    double totalPercent = 0;
-        for(double x in discount){
-        totalPercent += x;
-    }
-    return totalPercent;
-  }
 /*
 
 // EXEMPLO USANDO OS VALORES AMMOUT: 55 E PERCENT 100
@@ -118,12 +111,17 @@ class FlyerData {
 
   double finalPrice(){
     double ammountWithDiscount = 0;
-    ammountWithDiscount = injectDescountInPercent(percent: totalDiscount());
+    ammountWithDiscount = injectDescountInPercent();
     return num.parse(ammountWithDiscount.toStringAsFixed(2));
   }
 
-  double injectDescountInPercent({@required double percent}){
-    return (price - ((price / 100) * percent)).toDouble();
+  double injectDescountInPercent(){
+
+    double ammountFinal = price;
+    for(double x in discount){
+      ammountFinal = (ammountFinal - ((ammountFinal / 100) * x)).toDouble();
+    }
+    return ammountFinal;
   }
 
   addDiscount({@required double percent}){
@@ -135,16 +133,19 @@ class FlyerData {
 
     CupomData cupomAsVerify = await CupomModel(_cupomData).verificaCupom();
 
-    double descountFromCupom = cupomAsVerify.porcent;
-    if(descountFromCupom != 0){
-      _cupomData.porcent = descountFromCupom;
+    if(cupomAsVerify != null){
+
+      double descountFromCupom = cupomAsVerify.porcent;
       discount.add(descountFromCupom);
-      print("Desconto do cumpom ${_cupomData.id} atribuido com ${descountFromCupom}%");
+
       print("Descontos atuais ${discount}");
-      injectDescountInPercent(percent: descountFromCupom);
+      print("Descontos atuais ${discount}");
+
+      injectDescountInPercent();
       onSucess != null ? onSucess(cupomAsVerify) : null;
     }else{
-        onFailure != null ? onFailure("Cupom inválido, expirado ou já inserido") : null;
+      print("Cupom ${_cupomData.id} inválido, expirado ou já inserido");
+      onFailure != null ? onFailure("Cupom inválido, expirado ou já inserido") : null;
     }
   }
 
