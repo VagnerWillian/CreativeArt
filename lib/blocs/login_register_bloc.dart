@@ -3,7 +3,9 @@ import 'dart:io';
 import 'dart:math';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:creative_app/data/cupom.data.dart';
 import 'package:creative_app/data/user.data.dart';
+import 'package:creative_app/models/cupom.model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -77,12 +79,14 @@ class LoginAndRegister implements BlocBase {
   }
 
     SignUp({@required Map<String,dynamic> userMap, @required VoidCallback onSucess, @required Function onFailure})async{
-
-      FirebaseAuth.instance.createUserWithEmailAndPassword(email: userMap['email'], password: userMap['pass']).then((result) async {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: userMap['email'], password: userMap['pass']).then((result) async {
         _firebaseUser = result.user;
-        userMap.addAll({'id':_firebaseUser.uid,'promotionId': idGenerator()});
+
+        String promotionID = idGenerator();
+        userMap.addAll({'id':_firebaseUser.uid,'promotionId': promotionID});
 
         saveUserDataBasic(userMap: userMap);
+        createCupomFromUser(promotionID: promotionID);
         loadData();
         onSucess();
       })
@@ -90,6 +94,23 @@ class LoginAndRegister implements BlocBase {
         onFailure(errorAuth(error));
       })
       ;
+    }
+
+    createCupomFromUser({@required promotionID}){
+      CupomData cupomUser = CupomData(id: promotionID);
+
+      Map<String, dynamic> discount = {
+        "discount" : 5,
+        "typeDiscount" : "\$"
+      };
+
+      cupomUser.discount = discount;
+      cupomUser.created = Timestamp.now();
+      cupomUser.expire = Timestamp.fromDate(DateTime(9999, 1, 1, 00, 00, 00));
+      cupomUser.type = "promotionID";
+
+
+      CupomModel(cupomUser).createCupom();
     }
 
     signOut()async{

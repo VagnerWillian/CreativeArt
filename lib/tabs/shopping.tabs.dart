@@ -8,7 +8,7 @@ import 'package:creative_app/components/sliverapp/shopping.sliverapp.dart';
 import 'package:creative_app/data/category.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/data/user.data.dart';
-import 'package:creative_app/models/fire.catalog.model.dart';
+import '../tests/catalog.tester.dart';
 import 'package:creative_app/screens/login_signup.screen.dart';
 import 'package:creative_app/screens/splash.screen.dart';
 import 'package:creative_app/tabs/promotion.tab.dart';

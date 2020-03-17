@@ -3,7 +3,7 @@ import 'package:creative_app/blocs/catalog_bloc.dart';
 import 'package:creative_app/data/category.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/menus/menu.shop.dart';
-import 'package:creative_app/models/fire.catalog.model.dart';
+import '../tests/catalog.tester.dart';
 import 'package:creative_app/tabs/promotion.tab.dart';
 import 'package:creative_app/tabs/shopping.tabs.dart';
 import 'package:flutter/material.dart';

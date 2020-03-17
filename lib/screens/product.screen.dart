@@ -8,7 +8,7 @@ import 'package:creative_app/data/cupom.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/dialogs/cupom.dialog.dart';
 import 'package:creative_app/dialogs/preview.flyer.dialog.dart';
-import 'package:creative_app/models/fire.catalog.model.dart';
+import '../tests/catalog.tester.dart';
 import 'package:creative_app/models/validators.forms.dart';
 import 'package:creative_app/screens/login_signup.screen.dart';
 import 'package:creative_app/tiles/analytics.product.tile.dart';

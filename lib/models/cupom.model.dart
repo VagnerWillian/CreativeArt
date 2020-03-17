@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:creative_app/data/cupom.data.dart';
+import 'package:flutter/material.dart';
 
 class CupomModel{
 
@@ -41,6 +42,16 @@ class CupomModel{
     }else{
       return true;
     }
+  }
+
+  createCupom(){
+    Firestore _firestoreRef = Firestore.instance;
+    _firestoreRef.settings(persistenceEnabled: true);
+    print(_cupomData.toJson());
+
+    CollectionReference _refCupons = _firestoreRef.collection("cupons");
+    _refCupons.document(_cupomData.id).setData(_cupomData.toJson());
+
   }
 
 }

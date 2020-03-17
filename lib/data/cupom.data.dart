@@ -12,6 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CupomData {
   String _id;
+  String _type;
   Map<String, dynamic> _discount;
   Timestamp _created;
   Timestamp _expire;
@@ -23,6 +24,8 @@ class CupomData {
 
   String get id => _id;
   set id(String id) => _id = id;
+  String get type => _type;
+  set type(String type) => _type = type;
   Map<String, dynamic> get discount => _discount;
   set discount(Map<String, dynamic> discount) => _discount = discount;
   Timestamp get created => _created;
@@ -32,6 +35,7 @@ class CupomData {
 
   CupomData.fromJson(Map<String, dynamic> json) {
     _id = json['id'];
+    _type = json['type'];
     _discount = json['discount'];
     _created = json['created'];
     _expire = json['expire'];
@@ -40,6 +44,7 @@ class CupomData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this._id;
+    data['type'] = this._type;
     data['discount'] = this._discount;
     data['created'] = this._created;
     data['expire'] = this._expire;
