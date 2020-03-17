@@ -7,9 +7,11 @@ import 'package:creative_app/blocs/login_register_bloc.dart';
 import 'package:creative_app/components/input/login.signup.input.dart';
 import 'package:creative_app/data/cupom.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
+import 'package:creative_app/dialogs/cupom.dialog.dart';
 import 'package:creative_app/dialogs/preview.flyer.dialog.dart';
 import 'package:creative_app/models/fire.catalog.model.dart';
 import 'package:creative_app/models/validators.forms.dart';
+import 'package:creative_app/pack/off/rounded_loading_button.dart';
 import 'package:creative_app/screens/login_signup.screen.dart';
 import 'package:creative_app/tiles/analytics.product.tile.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -346,10 +348,10 @@ class InfoPrices extends StatefulWidget {
 class _InfoPricesState extends State<InfoPrices> {
 
   FlyerData _flyerData;
-  TextEditingController _cupomController = TextEditingController();
   CupomData _cupom;
-  final _cupomFormKey = GlobalKey<FormState>();
-  final loginAndSignUpBloc = BlocProvider.getBloc<LoginAndRegister>();
+
+
+  //final RoundedLoadingButtonController _btnCheckCupomController = new RoundedLoadingButtonController();
 
   _InfoPricesState(this._flyerData);
 
@@ -366,7 +368,6 @@ class _InfoPricesState extends State<InfoPrices> {
                 child: Text(Validators.convertToReal(_flyerData.finalPrice()), style: TextStyle(color: Colors.white),),
               ),
             ),
-
             Container(
               height: 35,
               child: DottedBorder(
@@ -377,79 +378,10 @@ class _InfoPricesState extends State<InfoPrices> {
                       barrierDismissible: false,
                       context: context,
                       builder: (context){
-                        return Dialog(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          child: Container(
-                            //padding: EdgeInsets.all(10),
-                            height: 150,
-                            child: Form(
-                              key: _cupomFormKey,
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[300],
-                                        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-                                      ),
-                                      padding: EdgeInsets.all(10),
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                            hintText: "DIGITE O CÓDIGO DO CUPOM",
-                                            border: InputBorder.none
-                                        ),
-                                        style: TextStyle(color: Colors.grey[600]),
-                                        keyboardType: TextInputType.text,
-                                        textCapitalization: TextCapitalization.characters,
-                                        controller: _cupomController,
-                                        validator: (str){
-                                          if(str.length < 3){
-                                            return "Cupom muito pequeno";
-                                          }else{
-                                            try{
-                                              if(loginAndSignUpBloc.actuallyUser.promotionId == str){
-                                                return "Você não pode usar seu próprio código";
-                                              }
-                                            }catch(x){}
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      child: RaisedButton(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10))),
-                                        elevation: 0,
-                                        color: Colors.yellow[800],
-                                        onPressed: ()async{
-                                          CupomData _verifyCupom;
-                                          if(_cupomFormKey.currentState.validate())
-                                            _verifyCupom = CupomData(id: _cupomController.text.toUpperCase());
-                                          if(_cupom == null){
-                                            await _flyerData.addDiscountFromCupom(_verifyCupom, onFailure: onFailure, onSucess: onSucess);
-                                            setState(() {});
-                                          }else{
-                                            onFailure("Um cupom já foi inserido");
-                                          }
-                                        } ,
-                                        child: Text("Verificar"),
-                                      ),
-                                    )
-
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
+                        return CupomDialog(_flyerData, onSucess, onFailure);
                       }
                   );
-                } : (){_cupom = null; _flyerData.discount.removeLast(); setState(() {});},
+                } : removeCupom,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -469,27 +401,37 @@ class _InfoPricesState extends State<InfoPrices> {
           ],
         ),
         _cupom == null ? Container() : Text("*Desconto de ${_cupom.porcent.round()}% do cupom já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
-
-
-
       ],
     );
-  }
-
-
-  String onSucess(CupomData cupomAccept){
-    Navigator.of(context).pop();
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Agora você tem ${cupomAccept.porcent.round()}% desconto", style: TextStyle(color: Colors.black)), backgroundColor: Colors.greenAccent, duration: Duration(seconds: 2),));
-    _cupom = cupomAccept;
   }
 
   String setCupom(){
     return _cupom == null ? "INSERIR CUPOM" : _cupom.id.toUpperCase();
   }
 
-  onFailure(String errorMessage){
+
+  checkCupom()async{
+
+  }
+
+  removeCupom(){
+    _cupom = null;
+    _flyerData.discount.removeLast();
+    setState(() {});
+  }
+
+  Future<String> onSucess(CupomData cupomAccept) async {
+    Navigator.of(context).pop();
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Agora você tem ${cupomAccept.porcent.round()}% desconto", style: TextStyle(color: Colors.black)), backgroundColor: Colors.greenAccent, duration: Duration(seconds: 2),));
+    _cupom = cupomAccept;
+    setState(() {});
+  }
+
+
+  onFailure(String errorMessage)async{
     Navigator.of(context).pop();
     Scaffold.of(context).showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.redAccent, duration: Duration(seconds: 2),));
-    //_cupom = null;
+    _cupom = null;
+    setState(() {});
   }
 }

@@ -139,7 +139,6 @@ class FlyerData {
       discount.add(descountFromCupom);
 
       print("Descontos atuais ${discount}");
-      print("Descontos atuais ${discount}");
 
       injectDescountInPercent();
       onSucess != null ? onSucess(cupomAsVerify) : null;
