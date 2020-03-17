@@ -4,14 +4,12 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:creative_app/blocs/catalog_bloc.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
-import 'package:creative_app/components/input/login.signup.input.dart';
 import 'package:creative_app/data/cupom.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/dialogs/cupom.dialog.dart';
 import 'package:creative_app/dialogs/preview.flyer.dialog.dart';
 import 'package:creative_app/models/fire.catalog.model.dart';
 import 'package:creative_app/models/validators.forms.dart';
-import 'package:creative_app/pack/off/rounded_loading_button.dart';
 import 'package:creative_app/screens/login_signup.screen.dart';
 import 'package:creative_app/tiles/analytics.product.tile.dart';
 import 'package:dotted_border/dotted_border.dart';
@@ -37,7 +35,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     final catalogBloc = BlocProvider.getBloc<CatalogBloc>();
 
     catalogBloc.addViewFlyer(_flyerData);
@@ -45,19 +42,19 @@ class _ProductScreenState extends State<ProductScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
             Top(),
             Body(),
-           // Bottom()
-        ],
+            // Bottom()
+          ],
         ),
       ),
     );
   }
 
-  Widget Top(){
+  Widget Top() {
     return Container(
       height: 420,
       child: Container(
@@ -90,9 +87,14 @@ class _ProductScreenState extends State<ProductScreen> {
                   height: 350,
                   child: Stack(
                     children: <Widget>[
-                      CachedNetworkImage(imageUrl: _flyerData.src,
-                        placeholder: (context, str){
-                          return Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation(Colors.white24),),);
+                      CachedNetworkImage(
+                        imageUrl: _flyerData.src,
+                        placeholder: (context, str) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.white24),
+                            ),
+                          );
                         },
                       ),
                       Positioned.fill(
@@ -100,17 +102,16 @@ class _ProductScreenState extends State<ProductScreen> {
                               color: Colors.transparent,
                               child: new InkWell(
                                 splashColor: Colors.black12,
-                                onTap: (){
-                                  showDialog(context: context,
-                                      builder: (context){
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
                                         return PreviewFlyer.previewDialog(src: _flyerData.src);
-                                      }
-                                  );
+                                      });
                                 },
                               ))),
                     ],
-                  )
-              ),
+                  )),
             ),
           ],
         ),
@@ -118,13 +119,13 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget Body(){
+  Widget Body() {
     final loginAndRegisterBloc = BlocProvider.getBloc<LoginAndRegister>();
 
     Map<String, dynamic> oneStep = {
       "title": "Pagamento",
       "subtitle": "Após escolher o cartaz que você mais gostou, basta clicar em COMPRAR AGORA e "
-                  "selecionar o melhor método de pagamento pra você. Aceitamos Boleto e Cartão de Crédito",
+          "selecionar o melhor método de pagamento pra você. Aceitamos Boleto e Cartão de Crédito",
     };
 
     Map<String, dynamic> twoStep = {
@@ -142,7 +143,7 @@ class _ProductScreenState extends State<ProductScreen> {
     Map<String, dynamic> fourStep = {
       "title": "Entrega",
       "subtitle": "Pronto, no seu pedido terá um botão pra você baixar o seu cartaz e compartilhar"
-                  " nas redes socials",
+          " nas redes socials",
     };
 
     List<dynamic> steps = [0, oneStep, twoStep, threeStep, fourStep];
@@ -161,7 +162,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  AnalyticsBar.AnalyticBar(value: _flyerData.views , icon: FontAwesomeIcons.eye, title: "Visualizações"),
+                  AnalyticsBar.AnalyticBar(value: _flyerData.views, icon: FontAwesomeIcons.eye, title: "Visualizações"),
                   AnalyticsBar.AnalyticBar(value: _flyerData.sell, icon: FontAwesomeIcons.check, title: "Vendidos"),
                   Stack(
                     children: <Widget>[
@@ -169,12 +170,14 @@ class _ProductScreenState extends State<ProductScreen> {
                       Positioned(
                         top: 10,
                         right: 10,
-                        child: Container(child: Text("Breve", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 9),),
+                        child: Container(
+                          child: Text(
+                            "Breve",
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 9),
+                          ),
                           padding: EdgeInsets.symmetric(vertical: 2, horizontal: 7),
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              border: Border.all(color: Colors.yellow[800])
-                          ),
+                              borderRadius: BorderRadius.circular(100), border: Border.all(color: Colors.yellow[800])),
                         ),
                       ),
                     ],
@@ -184,10 +187,12 @@ class _ProductScreenState extends State<ProductScreen> {
             ),
           ],
         ),
-
         Column(
           children: <Widget>[
-            Text("Avaliação média:", style: TextStyle(color: Colors.grey),),
+            Text(
+              "Avaliação média:",
+              style: TextStyle(color: Colors.grey),
+            ),
             RatingBar(
               unratedColor: Colors.grey[600],
               initialRating: _flyerData.rate,
@@ -211,49 +216,50 @@ class _ProductScreenState extends State<ProductScreen> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            loginAndRegisterBloc.actuallyUser != null ? Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              height: 50,
-              child: RaisedButton(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                onPressed: () {
-                  FireCatalogModel.comprar(_flyerData, loginAndRegisterBloc.actuallyUser.uid);
-                },
-                color: Colors.green,
-                child: Text(
-                  "Comprar agora",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ):
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 30),
-              padding: EdgeInsets.symmetric(horizontal: 50),
-              height: 50,
-              child: OutlineButton(
-                borderSide: BorderSide(color: Colors.greenAccent),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginAndSignUpScreen()));
-                },
-                color: Colors.green,
-                child: Text(
-                  "Entre e compre",
-                  style: TextStyle(color: Colors.greenAccent),
-                ),
-              ),
-            )
-            ,
+            loginAndRegisterBloc.actuallyUser != null
+                ? Container(
+                    margin: EdgeInsets.symmetric(vertical: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    height: 50,
+                    child: RaisedButton(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                      onPressed: () {
+                        FireCatalogModel.comprar(_flyerData, loginAndRegisterBloc.actuallyUser.uid);
+                      },
+                      color: Colors.green,
+                      child: Text(
+                        "Comprar agora",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  )
+                : Container(
+                    margin: EdgeInsets.symmetric(vertical: 30),
+                    padding: EdgeInsets.symmetric(horizontal: 50),
+                    height: 50,
+                    child: OutlineButton(
+                      borderSide: BorderSide(color: Colors.greenAccent),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => LoginAndSignUpScreen()));
+                      },
+                      color: Colors.green,
+                      child: Text(
+                        "Entre e compre",
+                        style: TextStyle(color: Colors.greenAccent),
+                      ),
+                    ),
+                  ),
           ],
         ),
         ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: steps.length,
-          itemBuilder: (context, item){
-            if(item != 0){
+          itemBuilder: (context, item) {
+            if (item != 0) {
               return Container(
                 margin: EdgeInsets.all(5),
                 child: ListTile(
@@ -262,29 +268,44 @@ class _ProductScreenState extends State<ProductScreen> {
                     height: 30,
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: Colors.purple, width: 2)
-                      ),
-                      child: Center(child: Text(item.toString(), style: TextStyle(color: Colors.white),)),
+                          borderRadius: BorderRadius.circular(100), border: Border.all(color: Colors.purple, width: 2)),
+                      child: Center(
+                          child: Text(
+                        item.toString(),
+                        style: TextStyle(color: Colors.white),
+                      )),
                     ),
                   ),
-                  title: Text(steps[item]['title'], style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                  subtitle: Text(steps[item]['subtitle'], style: TextStyle(color: Colors.grey),),
+                  title: Text(
+                    steps[item]['title'],
+                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(
+                    steps[item]['subtitle'],
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
               );
-            }else{
+            } else {
               return Container();
             }
-
           },
         ),
         Container(
           margin: EdgeInsets.only(top: 20),
           child: Column(
             children: <Widget>[
-              Text("Formas de pagamento", style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold),),
-              SizedBox(height: 40,
-              child: Icon(Icons.arrow_drop_down, color: Colors.purpleAccent,),),
+              Text(
+                "Formas de pagamento",
+                style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 40,
+                child: Icon(
+                  Icons.arrow_drop_down,
+                  color: Colors.purpleAccent,
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -292,7 +313,11 @@ class _ProductScreenState extends State<ProductScreen> {
                     width: 70,
                     child: Column(
                       children: <Widget>[
-                        Icon(FontAwesomeIcons.barcode, color: Colors.white, size: 70,),
+                        Icon(
+                          FontAwesomeIcons.barcode,
+                          color: Colors.white,
+                          size: 70,
+                        ),
                       ],
                     ),
                   ),
@@ -301,12 +326,20 @@ class _ProductScreenState extends State<ProductScreen> {
                     width: 70,
                     child: Column(
                       children: <Widget>[
-                        Icon(FontAwesomeIcons.solidCreditCard, color: Colors.white, size: 60,),
+                        Icon(
+                          FontAwesomeIcons.solidCreditCard,
+                          color: Colors.white,
+                          size: 60,
+                        ),
                       ],
                     ),
                   ),
                   Flexible(
-                    child: Text(" • Boleto \n • Cartão de Crédito \n • Depôsito Bancário \n • Transferência Bancária", style: TextStyle(color: Colors.white),textAlign: TextAlign.start,),
+                    child: Text(
+                      " • Boleto \n • Cartão de Crédito \n • Depôsito Bancário \n • Transferência Bancária",
+                      style: TextStyle(color: Colors.white),
+                      textAlign: TextAlign.start,
+                    ),
                   )
                 ],
               ),
@@ -317,7 +350,7 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  Widget Bottom(){
+  Widget Bottom() {
     return Container(
       height: 55,
       margin: EdgeInsets.only(top: 30),
@@ -336,7 +369,6 @@ class _ProductScreenState extends State<ProductScreen> {
 }
 
 class InfoPrices extends StatefulWidget {
-
   FlyerData _flyerData;
 
   InfoPrices(this._flyerData);
@@ -346,10 +378,8 @@ class InfoPrices extends StatefulWidget {
 }
 
 class _InfoPricesState extends State<InfoPrices> {
-
   FlyerData _flyerData;
   CupomData _cupom;
-
 
   //final RoundedLoadingButtonController _btnCheckCupomController = new RoundedLoadingButtonController();
 
@@ -363,9 +393,13 @@ class _InfoPricesState extends State<InfoPrices> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              child: RaisedButton(onPressed: (){},
+              child: RaisedButton(
+                onPressed: () {},
                 color: Colors.yellow[800],
-                child: Text(Validators.convertToReal(_flyerData.finalPrice()), style: TextStyle(color: Colors.white),),
+                child: Text(
+                  Validators.convertToReal(_flyerData.finalPrice()),
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
             Container(
@@ -373,26 +407,35 @@ class _InfoPricesState extends State<InfoPrices> {
               child: DottedBorder(
                 color: Colors.yellow[800],
                 child: OutlineButton(
-                  onPressed: _cupom == null ? (){
-                  showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (context){
-                        return CupomDialog(_flyerData, onSucess, onFailure);
-                      }
-                  );
-                } : removeCupom,
+                  onPressed: _cupom == null
+                      ? () {
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return CupomDialog(_flyerData, onSucess, onFailure);
+                              });
+                        }
+                      : removeCupom,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(setCupom(), style: TextStyle(
-                        color: Colors.yellow[800],
-                      ),),
-                      _cupom == null ? Container() : Container(
-                        width: 30,
-                        child: Icon(Icons.close, size: 20,color: Colors.yellow[800],),
-                      )
+                      Text(
+                        setCupom(),
+                        style: TextStyle(
+                          color: Colors.yellow[800],
+                        ),
+                      ),
+                      _cupom == null
+                          ? Container()
+                          : Container(
+                              width: 30,
+                              child: Icon(
+                                Icons.close,
+                                size: 20,
+                                color: Colors.yellow[800],
+                              ),
+                            )
                     ],
                   ),
                 ),
@@ -400,21 +443,23 @@ class _InfoPricesState extends State<InfoPrices> {
             ),
           ],
         ),
-        _cupom == null ? Container() : Text("*Desconto de ${_cupom.porcent.round()}% do cupom já aplicado", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),),
+        _cupom == null
+            ? Container()
+            : Text(
+                "*Desconto de ${_cupom.discount['typeDiscount'] == "%" ? "${_cupom.discount['discount'].round()}%" : "R\$${_cupom.discount['discount'].round()}"} do cupom já aplicado",
+                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w300),
+              ),
       ],
     );
   }
 
-  String setCupom(){
+  String setCupom() {
     return _cupom == null ? "INSERIR CUPOM" : _cupom.id.toUpperCase();
   }
 
+  checkCupom() async {}
 
-  checkCupom()async{
-
-  }
-
-  removeCupom(){
+  removeCupom() {
     _cupom = null;
     _flyerData.discount.removeLast();
     setState(() {});
@@ -422,15 +467,26 @@ class _InfoPricesState extends State<InfoPrices> {
 
   Future<String> onSucess(CupomData cupomAccept) async {
     Navigator.of(context).pop();
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text("Agora você tem ${cupomAccept.porcent.round()}% desconto", style: TextStyle(color: Colors.black)), backgroundColor: Colors.greenAccent, duration: Duration(seconds: 2),));
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(
+              "Agora você tem ${cupomAccept.discount['typeDiscount'] == "%"
+              ? "${cupomAccept.discount['discount'].round()}%"
+              : "R\$${cupomAccept.discount['discount'].round()}"} desconto",
+          style: TextStyle(color: Colors.black)),
+      backgroundColor: Colors.greenAccent,
+      duration: Duration(seconds: 2),
+    ));
     _cupom = cupomAccept;
     setState(() {});
   }
 
-
-  onFailure(String errorMessage)async{
+  onFailure(String errorMessage) async {
     Navigator.of(context).pop();
-    Scaffold.of(context).showSnackBar(SnackBar(content: Text(errorMessage), backgroundColor: Colors.redAccent, duration: Duration(seconds: 2),));
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(errorMessage),
+      backgroundColor: Colors.redAccent,
+      duration: Duration(seconds: 2),
+    ));
     _cupom = null;
     setState(() {});
   }

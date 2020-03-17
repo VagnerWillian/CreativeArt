@@ -21,20 +21,26 @@ class GeralBloc implements BlocBase{
     CollectionReference _geralRef = _firestoreRef.collection("geral");
     DocumentSnapshot cupomGeral = await  _geralRef.document("cupomGeral").get();
 
-    if(cupomGeral.data['id']!= null){
+    if(cupomGeral.data['id'] != null){
 
       CupomData startCupom = CupomData.fromJson(cupomGeral.data);
 
       CupomData cupomAsVerify = startCupom;
       CupomData result = await CupomModel(cupomAsVerify).verificaCupom();
 
-      double discountReceived = await result.porcent;
+      if(result != null){
+        Map<String, dynamic> discountReceived = await result.discount;
 
-      print("Um descondo geral foi atribuido ${discountReceived}%");
-      geralConfig.discountGeral = discountReceived;
+        print("Um descondo geral foi atribuido ${discountReceived}%");
+        geralConfig.discountGeral = discountReceived;
+      }else{
+        print("**** CUPOM DE INICIALIZAÇÃO PODE SER INVÁLIDO OU ESTAR EXPIRADO");
+        geralConfig.discountGeral = {};
+      }
+
     }else{
       print("Nenhum cupom esta atribuido");
-      geralConfig.discountGeral = 0.0;
+      geralConfig.discountGeral = {};
     }
 
   }

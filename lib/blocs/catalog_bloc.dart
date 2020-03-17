@@ -49,14 +49,16 @@ class CatalogBloc implements BlocBase {
     await _produtosRef.limit(_catalog[categoryID] != null ? _catalog[categoryID].length + increment: increment).where("category", isEqualTo: categoryID).getDocuments().then((productDocument) async {
       print("Items baixados: ${productDocument.documents.length} da categoria ${categoryID}");
       for(DocumentSnapshot doc in productDocument.documents){
+
         FlyerData _flyerData = FlyerData.fromJson(doc.data);
-
         final catalogBloc = BlocProvider.getBloc<GeralBloc>();
-        _flyerData.addDiscount(percent: catalogBloc.geralConfig.discountGeral);
 
-
+        _flyerData.addDiscountGeral(discountGeral: catalogBloc.geralConfig.discountGeral);
         _flyers.add(_flyerData);
+
       }
+    }).catchError((err){
+      print("********ERRO AO OBTER CARTAZES: ${err}");
     });
     _catalog.addAll({categoryID: _flyers});
     setCatalogList.add(_catalog);

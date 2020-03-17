@@ -1,4 +1,5 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:creative_app/blocs/login_register_bloc.dart';
 import 'package:creative_app/data/cupom.data.dart';
 import 'package:creative_app/data/flyer.data.dart';
@@ -40,7 +41,6 @@ class _CupomDialogState extends State<CupomDialog> {
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomRight: Radius.circular(20), topLeft:  Radius.circular(20))),
       child: Container(
-        //padding: EdgeInsets.all(10),
         child: Form(
           key: _cupomFormKey,
           child: Container(
@@ -50,9 +50,15 @@ class _CupomDialogState extends State<CupomDialog> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
+             /*   Container(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child:  Text("Alguns cupons são disponibilizados em páginas "
+                              "dos nossos parceiros, então acesse o menu PARCEIROS e sigam eles para acompanhar os descontos <3",
+                    style: TextStyle(color: Colors.grey), textAlign: TextAlign.center,),
+                ),*/
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Colors.grey[200],
                     borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
                   ),
                   padding: EdgeInsets.all(10),
@@ -97,7 +103,7 @@ class _CupomDialogState extends State<CupomDialog> {
                     onPressed: checkCupom,
                     child: Text("Verificar"),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -131,4 +137,5 @@ class _CupomDialogState extends State<CupomDialog> {
 
    offLoading();
   }
+
 }

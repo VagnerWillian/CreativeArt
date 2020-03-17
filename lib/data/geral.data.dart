@@ -1,16 +1,16 @@
 class GeralData {
   List<dynamic> _isMaintenance;
-  double _discountGeral;
+  Map<String, dynamic> _discountGeral;
 
-  GeralData({List<dynamic> isMaintenance, double discountGeral}) {
+  GeralData({List<dynamic> isMaintenance, Map<String, dynamic> discountGeral}) {
     this._isMaintenance = isMaintenance;
     this._discountGeral = discountGeral;
   }
 
   List<dynamic> get isMaintenance => _isMaintenance;
   set isMaintenance(List<dynamic> isMaintenance) => _isMaintenance = isMaintenance;
-  double get discountGeral => _discountGeral;
-  set discountGeral(double discountGeral) => _discountGeral = discountGeral;
+  Map<String, dynamic> get discountGeral => _discountGeral;
+  set discountGeral(Map<String, dynamic> discountGeral) => _discountGeral = discountGeral;
 
   GeralData.fromJson(Map<String, dynamic> json) {
     _isMaintenance = json['isMaintenance'].cast<dynamic>();

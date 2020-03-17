@@ -21,8 +21,7 @@ class FlyerData {
   String _title;
   String _src;
   double _price;
-  List<double> _discount;
-  int _cupom;
+  List<Map<String, dynamic>> _discount = [];
   String _category;
   double _views;
   double _sell;
@@ -33,7 +32,7 @@ class FlyerData {
         String title,
         String src,
         double price,
-        List<double> discount,
+        List<Map<String, dynamic>> discount,
         int cupom,
         String category,
         double views,
@@ -44,7 +43,6 @@ class FlyerData {
     this._src = src;
     this._price = price;
     this._discount = discount;
-    this._cupom = cupom;
     this._category = category;
     this._views = views;
     this._sell = sell;
@@ -59,10 +57,8 @@ class FlyerData {
   set src(String src) => _src = src;
   double get price => _price;
   set price(double price) => _price = price;
-  List<double> get discount => _discount;
-  set discount(List<double> discount) => _discount = discount;
-  int get cupom => _cupom;
-  set cupom(int cupom) => _cupom = cupom;
+  List<Map<String, dynamic>> get discount => _discount;
+  set discount(List<Map<String, dynamic>> discount) => _discount = discount;
   String get category => _category;
   set category(String category) => _category = category;
   double get views => _views;
@@ -77,8 +73,9 @@ class FlyerData {
     _title = json['title'];
     _src = json['src'];
     _price = json['price'];
-    _discount = json['discount'].cast<double>();
-    _cupom = json['cupom'];
+    for(Map<String,dynamic> x in json['discount']){
+      _discount.add(x);
+    }
     _category = json['category'];
     _views = json['views'];
     _sell = json['sell'];
@@ -92,7 +89,6 @@ class FlyerData {
     data['src'] = this._src;
     data['price'] = this._price;
     data['discount'] = this._discount;
-    data['cupom'] = this._cupom;
     data['category'] = this._category;
     data['views'] = this._views;
     data['sell'] = this._sell;
@@ -111,22 +107,13 @@ class FlyerData {
 
   double finalPrice(){
     double ammountWithDiscount = 0;
-    ammountWithDiscount = injectDescountInPercent();
+    ammountWithDiscount = priceFinalWithDescounts();
     return num.parse(ammountWithDiscount.toStringAsFixed(2));
   }
 
-  double injectDescountInPercent(){
-
-    double ammountFinal = price;
-    for(double x in discount){
-      ammountFinal = (ammountFinal - ((ammountFinal / 100) * x)).toDouble();
-    }
-    return ammountFinal;
-  }
-
-  addDiscount({@required double percent}){
-    if(percent != 0.0)
-      discount = [percent];
+  addDiscountGeral({@required Map<String, dynamic> discountGeral}){
+    if(!discountGeral.isEmpty)
+      discount = [discountGeral];
   }
 
   addDiscountFromCupom(CupomData _cupomData,{Function onFailure, Function onSucess})async{
@@ -135,17 +122,33 @@ class FlyerData {
 
     if(cupomAsVerify != null){
 
-      double descountFromCupom = cupomAsVerify.porcent;
+      Map<String, dynamic> descountFromCupom = cupomAsVerify.discount;
       discount.add(descountFromCupom);
 
+      priceFinalWithDescounts();
       print("Descontos atuais ${discount}");
 
-      injectDescountInPercent();
       onSucess != null ? onSucess(cupomAsVerify) : null;
+
     }else{
-      print("Cupom ${_cupomData.id} inválido, expirado ou já inserido");
       onFailure != null ? onFailure("Cupom inválido, expirado ou já inserido") : null;
     }
+  }
+
+  double priceFinalWithDescounts(){
+    double ammoutFinalWithDiscounts = price;
+    for(Map<String, dynamic> discount in discount){
+      if(discount['typeDiscount'] == "%"){
+        ammoutFinalWithDiscounts = (ammoutFinalWithDiscounts - ((ammoutFinalWithDiscounts / 100) * discount['discount'])).toDouble();
+      }else if(discount['typeDiscount'] == "\$"){
+        ammoutFinalWithDiscounts = ammoutFinalWithDiscounts - discount['discount'];
+      }
+    }
+    if(ammoutFinalWithDiscounts <= 0){
+      ammoutFinalWithDiscounts = 0;
+      print("****** O DESCONTO APLICADO É MAIOR DO QUE O VALOR DO PRODUTO");
+    }
+    return ammoutFinalWithDiscounts;
   }
 
   addView(){
