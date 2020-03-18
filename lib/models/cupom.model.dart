@@ -16,7 +16,6 @@ class CupomModel{
 
   Future<CupomData> _verificaCupomExist(String cupomID) async {
     Firestore _firestoreRef = Firestore.instance;
-    _firestoreRef.settings(persistenceEnabled: true);
 
     CollectionReference _refCupons = _firestoreRef.collection("cupons");
     DocumentSnapshot cupomSelected = await  _refCupons.document(cupomID).get();
