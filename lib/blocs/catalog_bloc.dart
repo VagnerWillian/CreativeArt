@@ -14,25 +14,27 @@ class CatalogBloc implements BlocBase {
   Sink<Map<String, dynamic>> get setCatalogList => _catalogController.sink;
   Map<String, dynamic> get actuallyListCatalog => _catalogController.value;
   Map<String, dynamic> _catalog = {};
+  List<CategoryData> _categories = [];
   int discountGeral = 0;
 
   Future<List<CategoryData>> loadCategories()async{
     Firestore _firestoreRef = Firestore.instance;
     _firestoreRef.settings(persistenceEnabled: true);
-    List<CategoryData> _categories = [];
     Map<String, dynamic> _catalog = {};
 
-    await _firestoreRef.collection("categorias").getDocuments().then((categoryDocument)async{
-      for(DocumentSnapshot doc in categoryDocument.documents){
-        CategoryData _category = CategoryData.fromJson(doc.data);
-        _catalog = await loadFlyersFromCategory(categoryID: _category.id, increment: 3);
-        if(_catalog[_category.id].length > 0){
-          _categories.add(_category);
-        }else{
-          print("Categoria ${doc.data['title']}, do ID: ${doc.data['id']} está vazio.");
+    if(_categories.isEmpty){
+      await _firestoreRef.collection("categorias").getDocuments().then((categoryDocument)async{
+        for(DocumentSnapshot doc in categoryDocument.documents){
+          CategoryData _category = CategoryData.fromJson(doc.data);
+          _catalog = await loadFlyersFromCategory(categoryID: _category.id, increment: 3);
+          if(_catalog[_category.id].length > 0){
+            _categories.add(_category);
+          }else{
+            print("Categoria ${doc.data['title']}, do ID: ${doc.data['id']} está vazio.");
+          }
         }
-      }
-    });
+      });
+    }
     return _categories;
   }
 

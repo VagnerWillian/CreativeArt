@@ -50,7 +50,7 @@ class LoginAndRegister implements BlocBase {
     ;
   }
 
-  deleteUserTest()async{
+  deleteUser()async{
     Firestore _firestoreRef = Firestore.instance;
    try{
      await _firestoreRef.collection("clientes").document(_firebaseUser.uid).delete();
@@ -147,6 +147,10 @@ class LoginAndRegister implements BlocBase {
 
     await _firestoreRef.collection("clientes").document(uid).get().then((userDocument){
       userData = UserData.fromJson(userDocument.data);
+    }).catchError((Ex){
+      print("****** PROBLEMA AO LOGAR, PROVALVEMENTE O USUARIO EXISTE MAS NÃO EXISTEM DADOS DELE NO FIRESTORE");
+      deleteUser();
+      signOut();
     });
     return userData;
   }

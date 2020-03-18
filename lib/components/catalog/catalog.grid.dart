@@ -8,6 +8,7 @@ import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/screens/product.screen.dart';
 import 'package:creative_app/tiles/catalog.item.tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CatalogGrid extends StatefulWidget {
@@ -39,7 +40,7 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     final double itemHeight = (size.height) / 3;
-    final double itemWidth = size.width / 2.6;
+    final double itemWidth = size.width / 2.2;
 
     return Expanded(
       child: Column(
@@ -98,16 +99,15 @@ class _CatalogGridState extends State<CatalogGrid> with SingleTickerProviderStat
                            // _loadData();
                           }
                         },
-                        child: GridView.builder(
+                        child: StaggeredGridView.countBuilder(
                           controller: _scrollController,
-                          padding: EdgeInsets.all(1),
+                          crossAxisCount: 4,
+                          staggeredTileBuilder: (int index) =>
+                          new StaggeredTile.count(2, index.isEven ? 3.8 : 3.8),
+                          mainAxisSpacing: 6.0,
+                          crossAxisSpacing: 6.0,
+                          padding: EdgeInsets.all(0),
                           itemCount: snapshot.data[cat.id].length,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: (itemWidth / itemHeight),
-                          ),
                           itemBuilder: (context, item) {
                             FlyerData _flyerData = snapshot.data[cat.id][item];
                             return CatalogTitleTile(flyerData: _flyerData, context: context);

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:creative_app/data/flyer.data.dart';
 import 'package:creative_app/dialogs/preview.flyer.dialog.dart';
@@ -14,12 +16,11 @@ Widget CatalogTitleTile({@required FlyerData flyerData, @required context}) {
   if (_flyerData == null) {
     return Center(
         child: CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation(Colors.white24),
-    ));
+          valueColor: AlwaysStoppedAnimation(Colors.white24),
+        ));
   }
-  var size = MediaQuery.of(context).size;
-  final double itemHeight = (size.height) / 4;
-  final double itemWidth = size.width / 3.4;
+
+
   return Container(
     margin: EdgeInsets.all(5),
     child: Column(
@@ -27,15 +28,25 @@ Widget CatalogTitleTile({@required FlyerData flyerData, @required context}) {
       children: <Widget>[
         Stack(
           children: <Widget>[
-            CachedNetworkImage(
-              imageUrl: _flyerData.src,
-              placeholder: (context, str) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation(Colors.white24),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: CachedNetworkImage(
+                    height: 260,
+                    fit: BoxFit.cover,
+                    imageUrl: _flyerData.src,
+                    placeholder: (context, str) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.white24),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
             Positioned.fill(
                 child: new Material(
@@ -50,16 +61,37 @@ Widget CatalogTitleTile({@required FlyerData flyerData, @required context}) {
                             });
                       },
                     ))),
+            /* Positioned(
+              top: 5,
+              right: -12,
+              child: Transform.rotate(
+                angle: - 3.14 / -8.0,
+                child: Container(
+                  width: 100,
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(color: Colors.black, blurRadius: 10)],
+                      color: Colors.yellow[800]
+                  ),
+                  child: Center(
+                    child: Text("-${_flyerData.discount[0]['typeDiscount'] == "%"
+                        ? "${_flyerData.discount[0]['discount'].round()}%"
+                        : "R\$${_flyerData.discount[0]['discount'].round()}"}OFF", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 11),),
+                  ),
+                ),
+              ),
+            )*/
           ],
         ),
         Container(
+            margin: EdgeInsets.all(5),
             child: Text(
-          _flyerData.title,
-          style: TextStyle(color: Colors.grey),
-          textAlign: TextAlign.start,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        )),
+              _flyerData.title,
+              style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.start,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            )),
         RatingBar(
           unratedColor: Colors.grey[600],
           initialRating: flyerData.rate,
@@ -82,7 +114,7 @@ Widget CatalogTitleTile({@required FlyerData flyerData, @required context}) {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-               Stack(
+                Stack(
                   children: <Widget>[
                     flyerData.price == flyerData.finalPrice() ? Container() : Text(
                       "de: ${Validators.convertToReal(flyerData.price)}",
@@ -108,28 +140,28 @@ Widget CatalogTitleTile({@required FlyerData flyerData, @required context}) {
               ],
             ),
             SizedBox(
-                  width: 10,
+              width: 10,
+            ),
+            Container(
+              width: 75,
+              child: RaisedButton(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductScreen(_flyerData)));
+                },
+                color: Colors.green,
+                child: //Icon(Icons.shopping_cart, color: Colors.white, size: 19,)
+                Text(
+                  "QUERO!",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold),
                 ),
-                Container(
-                  width: 75,
-                  child: RaisedButton(
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProductScreen(_flyerData)));
-                    },
-                    color: Colors.green,
-                    child: //Icon(Icons.shopping_cart, color: Colors.white, size: 19,)
-                    Text(
-                      "QUERO!",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
+              ),
+            ),
           ],
         ),
       ],
